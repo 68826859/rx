@@ -1,0 +1,117 @@
+.x-mask {
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+    opacity: 0.3;
+    /*background: black;*/
+}
+/*
+.x-action-col-icon {
+    height: 16px;
+    width: 16px;
+}*/
+
+.x-form-item-default.x-item-disabled {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+    opacity: 0.7;
+}
+
+
+.x-form-required-field.x-form-empty-field{
+    border-left:1px solid #cf4c35 !important;
+}
+
+/*
+.x-panel-default-framed {
+    border-color: #ffffff;
+}
+*/
+
+
+
+/*这里调颜色
+
+.x-tab-bar-default ,.x-treelist-navigation .x-treelist-item-selected > .x-treelist-row:before {
+    background-color: #B94343;
+}
+
+.x-treelist-navigation .x-treelist-item-selected.x-treelist-item-tool:after {
+    background-color: #963b3b;
+}
+
+.x-tab.x-tab-active.x-tab-default .x-tab-icon-el {
+    color: #B94343;
+}
+.x-tab.x-tab-active.x-tab-default .x-tab-inner-default {
+    color: #333;
+}
+.x-treelist-navigation .x-treelist-item-selected > .x-treelist-row-over:before{
+	background-color: #B94343;
+}
+
+*/
+
+.x-panel-header-default ,.x-panel-header-default-framed-top ,.x-panel-header-default-framed-top-mc{
+    background-color: #FFF !important;
+}
+.x-panel-header-default-framed .x-tool-img ,.x-panel-header-default .x-tool-img{
+    background-color: transparent;
+    color:#2eadf5;
+}
+.x-accordion-hd .x-tool-img{
+	background-image: none;
+}
+
+
+.x-panel-header-default{
+	border-color: #ddd;
+}
+
+
+.x-panel .x-panel-header-default-framed-top {
+    border-bottom-width: 1px !important;
+}
+
+
+.x-panel-header-default-framed{
+	border: 1px solid #FFF;
+}
+/*
+.x-panel-header-default-framed{
+	border: 1px solid #d0d0d0;
+}
+*/
+
+.x-panel-default-framed .x-grid-header-ct{
+	border-top-width: 1px !important;
+}
+
+
+
+.x-grid-body {
+    border-width: 1px 1px 1px;
+}
+
+.x-panel-default-framed {
+    border-color: #ddd;
+    border-width: 1px;
+}
+.x-panel-header-title-default ,.x-panel-header-title-default-framed{
+    color: #000;
+}
+
+
+.x-window-header-default{
+	background-color: #475360;
+}
+
+
+.x-window-header-default .x-tool-img{
+	background-color: transparent;
+}
+
+
+.x-window-default {
+    border-color: #475360;
+}
+.x-window-header-default {
+    border-color: #bdbdbd;
+}

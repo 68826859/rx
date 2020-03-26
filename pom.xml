@@ -1,0 +1,285 @@
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.rx</groupId>
+	<artifactId>rx</artifactId>
+	<version>1.0.4</version>
+	<packaging>pom</packaging>
+	<name>kanglefu-rx</name>
+
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<rx.version>1.0.4</rx.version>
+		<swagger.version>2.9.2</swagger.version>
+		<skipTests>true</skipTests>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>2.0.8.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-base</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-dubbo</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-spring</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-model</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-web</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-common</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-redis</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-ext-base</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-ext-web</artifactId>
+				<version>${rx.version}</version>
+				<!-- <type>war</type> -->
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-crud</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-dic</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-oss</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-mybatis</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<!-- <dependency> <groupId>com.rx.pub</groupId> <artifactId>rx-fastdfs</artifactId> 
+				<version>${rx.version}</version> </dependency> <dependency> <groupId>com.rx.pub</groupId> 
+				<artifactId>rx-oss</artifactId> <version>${rx.version}</version> </dependency> 
+				<dependency> <groupId>com.rx.pub</groupId> <artifactId>rx-log</artifactId> 
+				<version>${rx.version}</version> </dependency> <dependency> <groupId>com.rx.pub</groupId> 
+				<artifactId>rx-dysql</artifactId> <version>${rx.version}</version> </dependency> 
+				<dependency> <groupId>com.rx.pub</groupId> <artifactId>rx-msgq</artifactId> 
+				<version>${rx.version}</version> </dependency> -->
+			<!-- swagger -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>${swagger.version}</version>
+			</dependency>
+			<!-- swagger-ui -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>${swagger.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.persistence</groupId>
+				<artifactId>persistence-api</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>1.2.44</version>
+			</dependency>
+			
+			
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-role-web</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-role-service</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-role-permission</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			
+			
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-file-web</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-file-service</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-file-permission</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-file-base</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			
+			
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-pay-web</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-pay-service</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-pay-servface</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-pay-permission</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-pay-base</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-wechat-pay</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-wechat-service</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-wechat-web</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			
+			
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>javax.servlet-api</artifactId> 
+			<scope>provided</scope> </dependency> -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<modules>
+		<module>rx-base</module>
+		<module>rx-common</module>
+		<module>rx-dubbo</module>
+		<module>rx-model</module>
+		<module>rx-pub</module>
+		<module>rx-spring</module>
+		<module>rx-web</module>
+	</modules>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- java文件编译配置 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<!-- 部署添加源码包 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>

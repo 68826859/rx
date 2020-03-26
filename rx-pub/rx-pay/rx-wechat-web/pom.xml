@@ -1,0 +1,58 @@
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<groupId>com.rx.pub</groupId>
+		<artifactId>rx-pay</artifactId>
+		<version>1.0.4</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>rx-wechat-web</artifactId>
+	<packaging>jar</packaging>
+	<name>rx-wechat-web</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.rx</groupId>
+			<artifactId>rx-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.rx.pub</groupId>
+			<artifactId>rx-ext-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.rx.pub</groupId>
+			<artifactId>rx-wechat-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.rx.pub</groupId>
+			<artifactId>rx-pay-permission</artifactId>
+		</dependency>
+		
+		<!--swagger -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>io.swagger</groupId>
+					<artifactId>swagger-models</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-models</artifactId>
+			<version>1.5.21</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+		
+
+	</dependencies>
+
+</project>

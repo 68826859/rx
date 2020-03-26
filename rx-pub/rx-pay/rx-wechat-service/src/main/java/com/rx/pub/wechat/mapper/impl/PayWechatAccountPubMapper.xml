@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rx.pub.wechat.mapper.PayWechatAccountPubMapper">
+
+    <sql id="condition">
+        <if test="param.id != null and param.id != ''">
+            AND id = #{param.id}
+        </if>
+        <if test="param.accountCode != null and param.accountCode != ''">
+            AND account_code = #{param.accountCode}
+        </if>
+        <if test="param.appId != null and param.appId != ''">
+            AND app_id = #{param.appId}
+        </if>
+        <if test="param.secret != null and param.secret != ''">
+            AND secret = #{param.secret}
+        </if>
+        <if test="param.bizType != null">
+            AND biz_type = #{param.bizType}
+        </if>
+        <if test="param.accountId != null and param.accountId != ''">
+            AND account_id = #{param.accountId}
+        </if>
+        <if test="param.status != null">
+            AND status = #{param.status}
+        </if>
+        <if test="param.createTime != null">
+            AND create_time <![CDATA[>=]]>  #{param.createTime,jdbcType=TIMESTAMP}
+            AND create_time <![CDATA[<=]]> date_add(#{param.createTime,jdbcType=TIMESTAMP}, interval 1 day)
+        </if>
+    </sql>
+
+
+    <select id="searchList" resultType="com.rx.pub.wechat.model.dto.PayWechatAccountPubDto">
+        SELECT * FROM pay_wechat_account_pub
+        <where>
+            1 = 1
+            <include refid="condition"></include>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

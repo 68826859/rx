@@ -1,0 +1,20 @@
+Ext.define('Rx.ux.Ux', {
+	requires:[
+		'Rx.ux.JsonAjax',
+		'Rx.ux.Table',
+		'Rx.ux.Action',
+		'Rx.ux.Component',
+		'Rx.ux.Container',
+		'Rx.ux.GridGrouping',
+		'Rx.ux.GridPanel',
+		'Rx.ux.TreeColumn',
+		'Rx.ux.TreeItem',
+		'Rx.ux.TriggerField',
+		'Rx.ux.Button',
+		'Rx.ux.HtmlEditor',
+		'Rx.ux.Tabbar',
+		'Rx.ux.ActionColumn',
+		'Rx.ux.TreePicker'
+	]
+},function(){
+});

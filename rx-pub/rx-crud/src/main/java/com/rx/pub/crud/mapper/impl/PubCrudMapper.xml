@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rx.pub.crud.mapper.PubCrudMapper" >
+
+
+
+	<select id="listCrud" resultType="com.rx.pub.crud.po.PubCrud">
+		SELECT
+		t1.*
+		FROM
+		pub_crud t1
+		<where>
+			1=1
+			<if test="crudType != null">
+				AND t1.crud_type = #{crudType, jdbcType=INTEGER}
+			</if>
+			<if test="dataClass != null and dataClass != ''">
+				AND t1.data_class like CONCAT('%',#{dataClass}, '%')
+			</if>
+			<if test="dataId != null and dataId != ''">
+				AND t1.data_id like CONCAT('%',#{dataId}, '%')
+			</if>
+			<if test="beginTime != null" >
+				AND t1.create_time &gt;= #{beginTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="endTime != null" >
+				AND t1.create_time &lt; date_add(#{endTime, jdbcType=TIMESTAMP}, interval 1 day)
+			</if>
+		</where>
+		ORDER BY t1.CREATE_TIME DESC
+	</select>
+
+
+	<select id="listRecycle" resultType="com.rx.pub.crud.po.PubCrud">
+		SELECT a.* from pub_crud a join (select p.data_id as di,p.data_class as dc,max(p.create_time) as mt from pub_crud p GROUP BY di,dc) b on a.data_id = b.di and a.data_class = b.dc and a.create_time=mt 
+		<where>
+			1=1
+			<if test="crudType != null">
+				AND a.crud_type = #{crudType, jdbcType=INTEGER}
+			</if>
+			<if test="dataClass != null and dataClass != ''">
+				AND a.data_class like CONCAT('%',#{dataClass}, '%')
+			</if>
+			<if test="dataId != null and dataId != ''">
+				AND a.data_id like CONCAT('%',#{dataId}, '%')
+			</if>
+			<if test="beginTime != null" >
+				AND a.create_time &gt;= #{beginTime, jdbcType=TIMESTAMP}
+			</if>
+			<if test="endTime != null" >
+				AND a.create_time &lt; date_add(#{endTime, jdbcType=TIMESTAMP}, interval 1 day)
+			</if>
+		</where>
+		GROUP BY a.data_id,a.data_class ORDER BY a.create_time DESC
+	</select>
+
+</mapper>

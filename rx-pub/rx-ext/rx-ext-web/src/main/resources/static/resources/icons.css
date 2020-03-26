@@ -1,0 +1,46 @@
+/*
+* 16,32,48,64,80,96,112,128,144,160,176,192,208,224,240,256,272,288,304,320,336,352,368,384,400,...
+* 24,48,72,96,120,144,168,192,216,240,264,288,312,336,360,384,408,432,456,480,504,528,552,576,600,...
+* 32,64,96,128,160,192,224,256,288,320,352,384,416,448,480,512,544,576,608,640,672,704,736,768,800,...
+*/
+.pos-0-0{background-position: 0px 0px !important;}
+.pos-0-16{background-position: 0px -16px !important;}
+.pos-0-24{background-position: 0px -24px !important;}
+.pos-0-32{background-position: 0px -32px !important;}
+.pos-0-48{background-position: 0px -48px !important;}
+.pos-0-64{background-position: 0px -64px !important;}
+.pos-0-72{background-position: 0px -72px !important;}
+.pos-0-80{background-position: 0px -80px !important;}
+.pos-0-96{background-position: 0px -96px !important;}
+.pos-0-112{background-position: 0px -112px !important;}
+.pos-0-120{background-position: 0px -120px !important;}
+.pos-0-128{background-position: 0px -128px !important;}
+.pos-0-144{background-position: 0px -144px !important;}
+.pos-0-160{background-position: 0px -160px !important;}
+.pos-0-192{background-position: 0px -192px !important;}
+.pos-0-224{background-position: 0px -224px !important;}
+.pos-0-256{background-position: 0px -256px !important;}
+
+.pos-16-0{background-position: -16px 0px !important;}
+.pos-16-16{background-position: -16px -16px !important;}
+.pos-16-32{background-position: -16px -32px !important;}
+.pos-16-48{background-position: -16px -48px !important;}
+.pos-16-64{background-position: -16px -64px !important;}
+.pos-16-80{background-position: -16px -80px !important;}
+.pos-16-96{background-position: -16px -96px !important;}
+.pos-16-112{background-position: -16px -112px !important;}
+.pos-16-128{background-position: -16px -128px !important;}
+.pos-16-144{background-position: -16px -144px !important;}
+
+
+.pos-center-0{background-position: center 0px !important;}
+.pos-center-16{background-position: center -16px !important;}
+.pos-center-24{background-position: center -24px !important;}
+.pos-center-32{background-position: center -32px !important;}
+.pos-center-48{background-position: center -48px !important;}
+.pos-center-64{background-position: center -64px !important;}
+.pos-center-72{background-position: center -72px !important;}
+.pos-center-80{background-position: center -80px !important;}
+.pos-center-96{background-position: center -96px !important;}
+.pos-center-center{background-position: center center;}
+.pos-no-repeat{background-repeat: no-repeat;}

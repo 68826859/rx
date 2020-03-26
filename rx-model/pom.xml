@@ -1,0 +1,50 @@
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<groupId>com.rx</groupId>
+		<artifactId>rx</artifactId>
+		<version>1.0.4</version>
+	</parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>rx-model</artifactId>
+  <packaging>jar</packaging>
+  <name>rx-model</name>
+  
+	<dependencies>
+		
+
+		<dependency>
+			<groupId>com.rx</groupId>
+			<artifactId>rx-spring</artifactId>
+		</dependency>
+
+		<!-- spring jdbc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+
+		<!-- spring tx -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+
+		<!-- mysql
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency> -->
+		
+		<!-- io json -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.7.0</version>
+		</dependency>
+
+    </dependencies>
+    
+</project>
