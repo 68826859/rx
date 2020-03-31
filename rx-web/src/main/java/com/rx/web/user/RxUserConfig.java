@@ -71,6 +71,7 @@ public class RxUserConfig {
 					scfg.setTokenTimeout(an.tokenTimeout());
 				}
 				scfg.setUseThreadCache(an.userThreadCache());
+				scfg.setTokenInHeader(an.tokenInHeader());
 			}
 			cfg.sessionConfig = scfg;
 			configs.put(userClass, cfg);

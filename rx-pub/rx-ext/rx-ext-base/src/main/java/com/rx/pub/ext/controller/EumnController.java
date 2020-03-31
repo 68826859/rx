@@ -12,14 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 	@RestController
-@RequestMapping("pub")
+@RequestMapping("/pub/enum")
 public class EumnController {
     /**
      * 上传图片
      * @return
      * @throws Exception
      */
-    @RequestMapping("/enum")
+    @RequestMapping("/enumList")
     public DataResult enumList(String className) throws Exception{
     	
     	Assert.notNull(className,"枚举类名不能为空");

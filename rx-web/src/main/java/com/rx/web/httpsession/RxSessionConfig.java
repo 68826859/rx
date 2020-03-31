@@ -29,6 +29,9 @@ public class RxSessionConfig implements Serializable{
 	
 	private String tokenKey = "code";
 	
+	
+	private boolean tokenInHeader = false;
+	
 	private long httpTimeout = 30 * 60;//http超时时间，秒
 	
 	private int cookieTimeout = 60 * 60 * 24;//单位秒
@@ -110,7 +113,12 @@ public class RxSessionConfig implements Serializable{
 					return (String)oldToken;
 				}
 			}
-			String token = HttpServletHelper.getRequest().getHeader(tokenKey);
+			String token = null;
+			if(tokenInHeader) {
+				token = HttpServletHelper.getRequest().getHeader(tokenKey);
+			}else{
+				token = HttpServletHelper.getRequest().getParameter(tokenKey);
+			}
 			if(org.springframework.util.StringUtils.hasText(token)) {
 				code = token;
 			}else if(autoCreate) {
@@ -182,5 +190,14 @@ public class RxSessionConfig implements Serializable{
 
 	public void setUseThreadCache(boolean useThreadCache) {
 		this.useThreadCache = useThreadCache;
+	}
+
+	public boolean isTokenInHeader() {
+		return tokenInHeader;
+	}
+
+	public RxSessionConfig setTokenInHeader(boolean tokenInHeader) {
+		this.tokenInHeader = tokenInHeader;
+		return this;
 	}
 }

@@ -24,6 +24,8 @@ public @interface RxAnSession{
 	
 	public boolean userThreadCache() default false;
 	
+	public boolean tokenInHeader() default false;
+	
 	public String catalog() default NULL;//存储目录
 }
 

@@ -5,6 +5,8 @@ import com.rx.model.base.DictionaryDir;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.rx.pub.dic.mapper.PubDictionaryMapper;
@@ -21,17 +23,18 @@ public class PubDictionaryServiceImpl extends MybatisBaseService<PubDictionary> 
 
 	@Override
 	public void addDictionary(PubDictionary dic) {
-		dic.setId(dic.getParentId() + "-" + dic.getValue());
-		dic.setCreateTime(new Date());
+		
 		Example example = new Example(PubDictionary.class);
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("parentId", dic.getParentId());
-		dic.setSeq(pubDictionaryMapper.selectCountByExample(example));
-		
+		int seq = pubDictionaryMapper.selectCountByExample(example);
+		dic.setSeq(seq);
+		dic.setId(dic.getParentId() + "-" + seq);
+		dic.setCreateTime(new Date());
 		try {
 			pubDictionaryMapper.insert(dic);
 		}catch (Exception e) {
-			dic.setId(dic.getParentId() + "-" + dic.getValue()  + "-1");
+			dic.setId(dic.getParentId() + "-" + (new Random().nextInt(100)+100));
 			pubDictionaryMapper.insert(dic);
 		}
 	}

@@ -26,6 +26,8 @@ public @interface RxAnUserSession{
 	
 	public boolean userThreadCache() default true;
 	
+	public boolean tokenInHeader() default false;
+	
 	public String attribute() default NULL;//用户登录状态存储在session上的属性名
 }
 
