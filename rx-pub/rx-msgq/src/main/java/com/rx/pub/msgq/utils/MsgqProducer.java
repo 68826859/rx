@@ -1,0 +1,188 @@
+package com.rx.pub.msgq.utils;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
+
+import com.rx.base.cache.CacheHelper;
+import com.rx.base.serialize.Snapshot;
+import com.rx.pub.msgq.po.MsgqPo;
+import com.rx.pub.msgq.service.MsgqService;
+import com.rx.spring.utils.SpringContextHelper;
+
+@Component
+public class MsgqProducer {
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
+    
+    @Autowired
+    private MsgqService msgqService;
+    
+    public static String sendMessage(Snapshot<String> msg) {
+    	return sendMessage(msg,null,null);
+    }
+    
+    public static String sendMessage(Snapshot<String> msg,Date beginTime,Date endTime) {
+    	return sendMessage(msg,beginTime,endTime,null,false);
+    }
+    
+    public static String sendMessage(Snapshot<String> msg,Date beginTime,Date endTime,String singleKey,boolean cover) {
+    	MsgqProducer client;
+        try {
+        	client = SpringContextHelper.getBean(MsgqProducer.class);
+        	return client.sendMsg(msg,beginTime,endTime,singleKey,cover);
+        }catch (Exception ex){
+        	ex.printStackTrace();
+        }
+        return null;
+    }
+    /**
+     * 
+     * @param msg 消息体
+     * @param beginTime 消息被消费的开始时间
+     * @param endTime 消息的过期时间
+     * @param singleKey 独生键
+     * @param cover 如果设置独生键，是否覆盖
+     */
+    public String sendMsg(Snapshot<String> msg,Date beginTime,Date endTime,String singleKey,boolean cover){
+    	
+    	if(singleKey == null) {
+	    	synchronized (MSGQ_KEY){
+	    		MsgqPo msgp = new MsgqPo(null);
+	    		msgs.add(msgp.setMsgContent(msg.shot()).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime));
+	    		if (existThread < 2){
+	                existThread++; 
+	    	        taskExecutor.execute(new ProducerRunnable());
+	            }
+	    		return msgp.getMsgId();
+	    	}
+    	}else {
+	    	synchronized (MSGQ_KEY_SINGLE){
+	    		MsgqPo msgp = new MsgqPo(null);
+	    		singleMsgs.add(msgp.setMsgContent(msg.shot()).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime).setSingleKey(singleKey).setCover(cover));
+	    		if (existThreadSingle < 2){
+	    			existThreadSingle++; 
+	    	        taskExecutor.execute(new ProducerSingleRunnable());
+	            }
+	    		return msgp.getMsgId();
+	    	}
+    	}
+    }
+
+    final public static String MSGQ_KEY = "MSGQ_KEY";
+    private static List<MsgqPo> msgs = new ArrayList<MsgqPo>();
+    private static int existThread = 0;
+    
+    private class ProducerRunnable implements Runnable{
+    	@Override
+        public void run() {
+    		List<MsgqPo> olds = null;
+    		do {
+	        	synchronized (MSGQ_KEY){
+	        		olds = msgs;
+	        		if(msgs.size() > 0) {
+	        			msgs = new ArrayList<MsgqPo>();
+	        		}
+	            }
+	    		try {
+	            	if(olds.size() > 0) {
+	            		msgqService.insertMsgs(olds);
+	            		HashSet<String> set = new HashSet<String>();
+	            		for(MsgqPo msg:olds) {
+	            			set.add(msg.getMsgType());
+	            		}
+	            		for(String nm : set) {
+	            			CacheHelper.getCacher().put(nm, MSGQ_KEY);
+	            		}
+	            	}
+	            } catch (Exception e) {
+	            	e.printStackTrace();
+	            }
+    		}while(olds.size() > 0);
+    		if(existThread > 0) {
+        		existThread--;
+        	}
+        }
+    	
+    }
+    
+    /**
+     *	 独生消息
+     */
+    final private static String MSGQ_KEY_SINGLE = "MSGQ_KEY_SINGLE";
+    private static List<MsgqPo> singleMsgs = new ArrayList<MsgqPo>();
+    private static int existThreadSingle = 0;
+    
+    private class ProducerSingleRunnable implements Runnable{
+    	@Override
+        public void run() {
+    		List<MsgqPo> olds = null;
+    		do {
+	        	synchronized (MSGQ_KEY_SINGLE){
+	        		olds = singleMsgs;
+	        		if(singleMsgs.size() > 0) {
+	        			singleMsgs = new ArrayList<MsgqPo>();
+	        		}
+	            }
+	    		try {
+	            	if(olds.size() > 0) {
+	            		HashSet<String> set = new HashSet<String>();
+	            		HashMap<String,MsgqPo> singles = new HashMap<String,MsgqPo>();
+	            		MsgqPo base;
+	            		String skey;
+	            		for(MsgqPo msg:olds) {
+	            			skey = msg.getSingleKey();
+	            			base = singles.get(skey);
+	            			if(base == null) {
+	            				base = msgqService.selectOneAvailableSingleMsg(skey);
+	            				if(base == null) {
+	            					singles.put(skey, msg);
+	            				}else {
+	            					if(msg.isCover()) {
+	    	            				base.setHolder(msg.getMsgId());
+	    	            				msgqService.updateByPrimaryKey(base);
+	    	            				singles.put(skey, msg);
+	    	            			}else {
+	    	            				msg.setHolder(base.getMsgId());
+	    	            				singles.put(skey, base);
+	    	            			}
+	            				}
+	            			}else {
+		            			if(msg.isCover()) {
+		            				base.setHolder(msg.getMsgId());
+		            				singles.put(skey, msg);
+		            			}else {
+		            				msg.setHolder(base.getMsgId());
+		            			}
+	            			}
+	            			set.add(msg.getMsgType());
+	            		}
+	            		msgqService.insertMsgs(olds);
+	            		for(String nm : set) {
+	            			CacheHelper.getCacher().put(nm, MSGQ_KEY);
+	            		}
+	            	}
+	            	/*
+	                String url = PropertiesHelper.getValue("WECHAT_SERVICE_URL") + "/wechat/templateMessage/postMessage";
+	                String jsonStr = HttpUtils.doPost(url);
+	                if (jsonStr == null) {
+	                    throw new BusinessException("请求微信服务器失败");
+	                }
+	                */
+	            } catch (Exception e) {
+	            	e.printStackTrace();
+	            }
+    		}while(olds.size() > 0);
+    		
+    		if(existThreadSingle > 0) {
+    			existThreadSingle--;
+        	}
+        }
+    }
+}

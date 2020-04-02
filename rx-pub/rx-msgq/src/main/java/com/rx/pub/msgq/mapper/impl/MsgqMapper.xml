@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rx.pub.msgq.mapper.MsgqMapper">
+    <sql id="condition">
+        <if test="param.msgId != null and param.msgId != ''">
+            AND instr(t1.msg_id, #{param.msgId,jdbcType=VARCHAR}) > 0
+        </if>
+        <if test="param.msgType != null and param.msgType != ''">
+            AND instr(t1.msg_type, #{param.msgType,jdbcType=VARCHAR}) > 0
+        </if>
+        
+        <if test="param.holder != null and param.holder != ''">
+            AND instr(t1.holder, #{param.holder,jdbcType=VARCHAR}) > 0
+        </if>
+        
+        <if test="param.singleKey != null and param.singleKey != ''">
+            AND instr(t1.single_key, #{param.singleKey,jdbcType=VARCHAR}) > 0
+        </if>
+        
+        <if test="param.createTime != null">
+            AND create_time &gt;= #{param.createTime,jdbcType=TIMESTAMP}
+            AND create_time &lt; date_add(#{param.createTime,jdbcType=TIMESTAMP}, interval 1 day)
+        </if>
+        
+        <if test="param.msgContent != null and param.msgContent != ''">
+            AND instr(t1.msg_content, #{param.msgContent,jdbcType=VARCHAR}) > 0
+        </if>
+        
+        <if test="param.beginTime != null">
+            AND begin_time &gt;= #{param.beginTime,jdbcType=TIMESTAMP}
+            AND begin_time &lt; date_add(#{param.beginTime,jdbcType=TIMESTAMP}, interval 1 day)
+        </if>
+        
+        <if test="param.endTime != null">
+            AND end_time &gt;= #{param.endTime,jdbcType=TIMESTAMP}
+            AND end_time &lt; date_add(#{param.endTime,jdbcType=TIMESTAMP}, interval 1 day)
+        </if>
+        
+        <if test="param.errorMsg != null and param.errorMsg != ''">
+            AND instr(t1.error_msg, #{param.errorMsg,jdbcType=VARCHAR}) > 0
+        </if>
+        
+    </sql>
+
+	<select id="listMsg" resultType="com.rx.pub.msgq.po.MsgqPo">
+		select * from pub_msgq t1
+		<where>
+            <include refid="condition"/>
+        </where>
+        ORDER BY t1.CREATE_TIME DESC
+	</select>
+	
+	<select id="listMsgPage" resultType="com.rx.pub.msgq.po.MsgqPo">
+		select * from pub_msgq t1
+		<where>
+            <include refid="condition"/>
+        </where>
+        ORDER BY t1.CREATE_TIME DESC
+	</select>
+	
+	<select id="selectOneHoldMsg" resultType="com.rx.pub.msgq.po.MsgqPo">
+		select * from pub_msgq where msg_type=#{msgType, jdbcType=VARCHAR} and holder=#{holder, jdbcType=VARCHAR} limit 1
+	</select>
+	
+	<select id="selectOneAvailableSingleMsg" resultType="com.rx.pub.msgq.po.MsgqPo">
+		select * from pub_msgq where single_key=#{singleKey, jdbcType=VARCHAR} and (ISNULL(holder) or holder='') and (ISNULL(end_time) or (NOW() &lt;= end_time)) limit 1;
+	</select>
+	
+	
+	<update id="updateHoldOneMsg">
+	update pub_msgq set holder=#{holder, jdbcType=VARCHAR} where msg_type=#{msgType, jdbcType=VARCHAR} and (ISNULL(holder) or holder='') and (ISNULL(begin_time) or (NOW() &gt; begin_time)) and (ISNULL(end_time) or (NOW() &lt;= end_time)) limit 1;
+    </update>
+	
+	<insert id ="insertBatch" parameterType="java.util.List" >
+            insert into pub_msgq (msg_id, msg_type, holder,single_key,create_time,msg_content,begin_time,end_time) values
+             <foreach collection ="list" item="item" index= "index" separator =",">
+                 (
+                 #{item.msgId},
+                 #{item.msgType},
+                 #{item.holder},
+                 #{item.singleKey},
+                 #{item.createTime},
+                 #{item.msgContent},
+                 #{item.beginTime},
+                 #{item.endTime}
+                 )
+             </foreach >
+   </insert >
+	
+</mapper>

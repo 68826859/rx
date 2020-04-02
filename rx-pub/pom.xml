@@ -13,6 +13,7 @@
 
     <modules>
         <module>rx-crud</module>
+        <module>rx-msgq</module>
         <module>rx-dic</module>
         <module>rx-ext</module>
         <module>rx-file</module>
