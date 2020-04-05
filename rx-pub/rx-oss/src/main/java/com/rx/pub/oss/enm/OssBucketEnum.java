@@ -7,7 +7,7 @@ public enum OssBucketEnum implements Showable<Integer> {
 
 	nnscpublic(0,FileAccessEnum.公共读写,"bjcj-read/","bjcj-read","https://bjcj-read.oss-cn-shenzhen.aliyuncs.com"),
 	nnsc(1,FileAccessEnum.私有,"bjcj-pri/","bjcj-pri","https://bjcj-pri.oss-cn-shenzhen.aliyuncs.com"),
-	nnstatic(2,FileAccessEnum.公共读,"aieye/","kanglefu-test","http://kanglefu-test.oss-cn-beijing.aliyuncs.com"),
+	nnstatic(2,FileAccessEnum.公共读,"fyt/","fyt-test-read","https://fyt-test-read.oss-cn-chengdu.aliyuncs.com"),
 	;
 	
 	OssBucketEnum(Integer code, FileAccessEnum access, String prefix, String bucketName, String bucketDomain) {

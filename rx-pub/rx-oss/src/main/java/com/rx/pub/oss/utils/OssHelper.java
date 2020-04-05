@@ -115,6 +115,41 @@ public class OssHelper {
             //ClientConfiguration configuration = new ClientConfiguration();
             //configuration.setProtocol(Protocol.HTTPS);
             //ossClient = new OSSClient(PropertiesHelper.getValue(endpoint), respMap.get("AccessKeyId"), respMap.get("AccessKeySecret"), respMap.get("SecurityToken"), configuration);
+        	String ep = PropertiesHelper.getValue(endpoint);
+        	
+        	ossClient = new OSSClient(PropertiesHelper.getValue(endpoint), PropertiesHelper.getValue(accessKeyId), PropertiesHelper.getValue(accessKeySecret));
+            ossClient.putObject(bucketEnum.getBucketName(), keySuffixWithSlash, is);
+        } catch (Exception e) {
+            log.warn(e.getMessage(), e);
+            throw new BusinessException("文件上传异常");
+        } finally {
+            IOUtils.safeClose(is);
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+        return keySuffixWithSlash;
+    }
+    
+    
+    public static String simpleUpload2(InputStream is, String extension, FileAccessEnum accessEnum, String filePerfix) {
+        OssBucketEnum bucketEnum = OssBucketEnum.findByFileAccessEnum(accessEnum);
+        String keySuffixWithSlash = null;
+        if (extension.indexOf(".") > -1) {
+            extension = extension.substring(extension.indexOf(".") + 1);
+        }
+        keySuffixWithSlash = randomFileName(filePerfix) + "." + extension;
+		/*Long pttl = CacheHelper.getCacher().pttl(roleSessionName);
+		if (pttl < 0 || ossClient == null) {
+			refreshClient();
+		}*/
+        //Map<String, String> respMap = new HashMap<String, String>();
+        OSSClient ossClient = null;
+        try {
+            //respMap = assumeRole();
+            //ClientConfiguration configuration = new ClientConfiguration();
+            //configuration.setProtocol(Protocol.HTTPS);
+            //ossClient = new OSSClient(PropertiesHelper.getValue(endpoint), respMap.get("AccessKeyId"), respMap.get("AccessKeySecret"), respMap.get("SecurityToken"), configuration);
             ossClient = new OSSClient(PropertiesHelper.getValue(endpoint), PropertiesHelper.getValue(accessKeyId), PropertiesHelper.getValue(accessKeySecret));
             ossClient.putObject(bucketEnum.getBucketName(), keySuffixWithSlash, is);
         } catch (Exception e) {
@@ -128,6 +163,7 @@ public class OssHelper {
         }
         return keySuffixWithSlash;
     }
+    
 
     /**
      * 删除文件
