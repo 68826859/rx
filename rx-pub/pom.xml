@@ -20,6 +20,9 @@
         <module>rx-mybatis</module>
         <module>rx-oss</module>
         <module>rx-pay</module>
+        
+        <module>rx-wxmp</module>
+        
         <module>rx-redis</module>
         <module>rx-role</module>
     </modules>

@@ -92,6 +92,13 @@
 			
 			<dependency>
 				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-wxmp</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			
+			
+			<dependency>
+				<groupId>com.rx.pub</groupId>
 				<artifactId>rx-dic</artifactId>
 				<version>${rx.version}</version>
 			</dependency>
