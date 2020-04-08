@@ -42,7 +42,11 @@ public class WxMpConfiguration {
     }*/
     
     protected static WxMpService getMpService(String appId) {
-        return mpServices.get(appId);
+    	if(WxMpMgr.DefaultAppId.equals(appId)) {
+    		return mpServices.entrySet().iterator().next().getValue();
+    	}else {
+    		return mpServices.get(appId);
+    	}
     }
     
     

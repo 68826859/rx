@@ -15,10 +15,13 @@ public class WxMpMgr {
     }
    
     
+    
+    protected static String DefaultAppId = "default-appId"; 
+    
     private static Map<String, PubWxMpService> mpServices = Maps.newHashMap();
     
     public static PubWxMpService getPubWxMpService() {
-        return getPubWxMpService(null);
+        return getPubWxMpService(DefaultAppId);
     }
     
     
