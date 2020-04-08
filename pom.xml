@@ -96,6 +96,11 @@
 				<version>${rx.version}</version>
 			</dependency>
 			
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-msgq</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>com.rx.pub</groupId>

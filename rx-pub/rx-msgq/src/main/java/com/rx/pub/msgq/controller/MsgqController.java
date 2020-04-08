@@ -36,7 +36,7 @@ public class MsgqController {
 	@RequestMapping( value = "/consumer", method = RequestMethod.POST)
     @ResponseBody
     public DataResult postMessage(){
-        	MsgqConsumer.consumeMessage();
+        	//MsgqConsumer.consumeMessage();
         	return new DataResult("");
     }
     

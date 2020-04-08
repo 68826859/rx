@@ -104,8 +104,9 @@ public class MsgqPo{
 	public Date getCreateTime() {
 		return createTime;
 	}
-	public void setCreateTime(Date createTime) {
+	public MsgqPo setCreateTime(Date createTime) {
 		this.createTime = createTime;
+		return this;
 	}
 	public String getMsgContent() {
 		return msgContent;

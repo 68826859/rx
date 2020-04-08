@@ -5,13 +5,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
-
+import com.alibaba.fastjson.JSON;
 import com.rx.base.cache.CacheHelper;
-import com.rx.base.serialize.Snapshot;
+import com.rx.pub.msgq.base.Msgq;
 import com.rx.pub.msgq.po.MsgqPo;
 import com.rx.pub.msgq.service.MsgqService;
 import com.rx.spring.utils.SpringContextHelper;
@@ -24,15 +23,15 @@ public class MsgqProducer {
     @Autowired
     private MsgqService msgqService;
     
-    public static String sendMessage(Snapshot<String> msg) {
+    public static String sendMessage(Msgq msg) {
     	return sendMessage(msg,null,null);
     }
     
-    public static String sendMessage(Snapshot<String> msg,Date beginTime,Date endTime) {
+    public static String sendMessage(Msgq msg,Date beginTime,Date endTime) {
     	return sendMessage(msg,beginTime,endTime,null,false);
     }
     
-    public static String sendMessage(Snapshot<String> msg,Date beginTime,Date endTime,String singleKey,boolean cover) {
+    public static String sendMessage(Msgq msg,Date beginTime,Date endTime,String singleKey,boolean cover) {
     	MsgqProducer client;
         try {
         	client = SpringContextHelper.getBean(MsgqProducer.class);
@@ -50,12 +49,12 @@ public class MsgqProducer {
      * @param singleKey 独生键
      * @param cover 如果设置独生键，是否覆盖
      */
-    public String sendMsg(Snapshot<String> msg,Date beginTime,Date endTime,String singleKey,boolean cover){
+    public String sendMsg(Msgq msg,Date beginTime,Date endTime,String singleKey,boolean cover){
     	
     	if(singleKey == null) {
 	    	synchronized (MSGQ_KEY){
 	    		MsgqPo msgp = new MsgqPo(null);
-	    		msgs.add(msgp.setMsgContent(msg.shot()).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime));
+	    		msgs.add(msgp.setMsgContent(JSON.toJSONString(msg)).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime));
 	    		if (existThread < 2){
 	                existThread++; 
 	    	        taskExecutor.execute(new ProducerRunnable());
@@ -65,7 +64,7 @@ public class MsgqProducer {
     	}else {
 	    	synchronized (MSGQ_KEY_SINGLE){
 	    		MsgqPo msgp = new MsgqPo(null);
-	    		singleMsgs.add(msgp.setMsgContent(msg.shot()).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime).setSingleKey(singleKey).setCover(cover));
+	    		singleMsgs.add(msgp.setMsgContent(JSON.toJSONString(msg)).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime).setSingleKey(singleKey).setCover(cover));
 	    		if (existThreadSingle < 2){
 	    			existThreadSingle++; 
 	    	        taskExecutor.execute(new ProducerSingleRunnable());
