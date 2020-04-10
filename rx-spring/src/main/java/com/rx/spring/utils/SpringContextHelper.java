@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 
@@ -75,8 +76,68 @@ public class SpringContextHelper implements ApplicationContextAware {
         }
         return null;
     }
+    
+    
+    /**
+     * 获取类的泛型
+     * @param clazz
+     * @return
+     */
+    
+    public static Class<?> getBeanActualType(Class<?> clazz , Class<?> targetClass,int index) {
+    	
+    	if(targetClass.isInterface()){
+    		Type[] types = clazz.getGenericInterfaces();
+    		if(types.length > 0) {
+	    		for(Type type : types) {
+	    			if(type instanceof ParameterizedType) {
+	    				if(((ParameterizedType)type).getRawType().getTypeName().equals(targetClass.getName())) {
+		    				return (Class<?>)((ParameterizedType)type).getActualTypeArguments()[index];
+		    			}
+	    			}
+	    		}
+    		}
+    		if(!clazz.isInterface()) {
+    			if(clazz.getSuperclass() != Object.class) {
+        			return getBeanActualType(clazz.getSuperclass(),targetClass,index);
+        		}
+    		}
+    		Class<?>[] ss = clazz.getInterfaces();
+			for(Class<?> s:ss) {
+				Class<?> res = getBeanActualType(s,targetClass,index);
+				if(res != null) {
+					return res;
+				}
+			}
+    	}else {
+    		if(clazz.getSuperclass() == targetClass) {
+    			return getSuperclassActualType(clazz,index);
+    		} else if(clazz.getSuperclass() != Object.class) {
+    			return getBeanActualType(clazz.getSuperclass(),targetClass,index);
+    		}
+    	}
+        return null;
+    }
 
-
+    public static Class<?> getSuperclassActualType(Class<?> clazz,int index) {
+    	return (Class<?>) ((ParameterizedType)clazz.getGenericSuperclass()).getActualTypeArguments()[index];
+    }
+    
+    public static Class<?> getInterfacesActualType(Class<?> clazz,Class<?> targetClass,int index) {
+    	Type[] types = clazz.getGenericInterfaces();
+		if(types.length > 0) {
+    		for(Type type : types) {
+    			if(type instanceof ParameterizedType) {
+    				if(((ParameterizedType)type).getRawType().getTypeName().equals(targetClass.getName())) {
+	    				return (Class<?>)((ParameterizedType)type).getActualTypeArguments()[index];
+	    			}
+    			}
+    		}
+		}
+		return null;
+    }
+    
+    
     public static <T> Map<String, T> getBeans(Class<T> clazz) {
         return BeanFactoryUtils.beansOfTypeIncludingAncestors(springContext, clazz);
     }

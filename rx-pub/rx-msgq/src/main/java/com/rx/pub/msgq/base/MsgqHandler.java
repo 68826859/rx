@@ -1,10 +1,7 @@
 package com.rx.pub.msgq.base;
 
-public interface MsgqHandler {
+public interface MsgqHandler<T extends Msgq> {
 	
 	
-	public Class<? extends Msgq>[] getHandleTypes();
-	
-	
-	public void handleMsg(Msgq msg,String msgId) throws Exception;
+	public void handleMsg(T msg,String msgId) throws Exception;
 }

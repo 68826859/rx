@@ -40,37 +40,93 @@ public class MsgqConsumer {
     }
     
     
-    private Map<String,MsgqHandler> handlers;
+    private static Map<Class<?>,Class<? extends MsgqHandler<?>>> handlerTypes = new HashMap<Class<?>,Class<? extends MsgqHandler<?>>>();
     
     
+    public static void regHandlerCls(Class<? extends MsgqHandler<?>> cls) {
+    	
+    	Class<?> typeCls = SpringContextHelper.getInterfacesActualType(cls,MsgqHandler.class,0);
+    	
+    	handlerTypes.put(typeCls,cls);
+    	
+    	
+    	MsgqConsumer client = SpringContextHelper.getBean(MsgqConsumer.class);
+    	if(client != null) {
+    		client.doInitTask();
+    	}
+    	
+    }
     
-    
-    
-    @PostConstruct
-    public void doInit() {
+    private static Map<String, MsgqHandler<?>> getHandlers(){
+    	
     	
     	Map<String, MsgqHandler> handlerMap  = SpringContextHelper.getBeans(MsgqHandler.class);
     	
-    	if(!handlerMap.isEmpty()) {
-    		handlers = new HashMap<String,MsgqHandler>();
-    		for(Entry<String, MsgqHandler> entry : handlerMap.entrySet()) {
-    			Class<? extends Msgq>[] clss = entry.getValue().getHandleTypes();
-    			if(clss != null) {
-    				for(Class<? extends Msgq> cls : clss) {
-    					handlers.put(cls.getName(), entry.getValue());
-    				}
-    			}
-    		}
+    	MsgqHandler<?> handler;
     	
-	    	future = threadPoolTaskScheduler.schedule(new Runnable() {
-				@Override
-				public void run() {
-					consumeMsg();
-				}
-	    	}, new CronTrigger("0/5 * * * * ?"));
+    	for(Entry<Class<?>, Class<? extends MsgqHandler<?>>> entry :handlerTypes.entrySet()) {
+    		
+    		handler = null;
+    		entry.getKey();
+    		
+    		for(Entry<String, MsgqHandler> handlerItem:handlerMap.entrySet()) {
+    			
+    			if(entry.getValue().isInstance(handlerItem.getValue())) {
+    				handler = handlerItem.getValue();
+    				break;
+    			}
+        	}
+    		
+    		if(handler == null) {
+    			try {
+					handler = entry.getValue().newInstance();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} 
+    		}
+    		
+    		
+    		
+    		
+    		
+    		
     	}
+    	
+    	
+    	return null;
+    }
+    
+    @PostConstruct
+    public void doInit() {
+    	doInitTask();
+    }
+    
+    private void doInitTask() {
+        	
+    	if(!handlerTypes.isEmpty()) {
+        	
+    		if (future == null) {
+		    	future = threadPoolTaskScheduler.schedule(new Runnable() {
+					@Override
+					public void run() {
+						consumeMsg();
+					}
+		    	}, new CronTrigger("0/5 * * * * ?"));
+    		}
+    	}
+    	
     }
 
+    /*
+    public static void main(String[] args) {
+    	
+    	System.out.println(SpringContextHelper.getBeanActualType(MsgqServiceImpl.class,BaseService.class,0).getName());
+    	
+    	
+    }
+    */
+    
+    
     @PreDestroy
     public void doDestory() {
     	if (future != null) {
@@ -201,9 +257,20 @@ public class MsgqConsumer {
 	            @Override
 	            public void run() {
 	            	
-	            	for(Entry<String, MsgqHandler> entry :handlers.entrySet()) {
+	            	MsgqHandler<?> handler;
+	            	
+	            	for(Entry<Class<?>, Class<? extends MsgqHandler<?>>> entry :handlerTypes.entrySet()) {
 	            		
-	            		String msgType = entry.getKey();
+	            		handler = SpringContextHelper.getBean(entry.getValue());
+	            		if(handler == null) {
+	            			try {
+	        					handler = entry.getValue().newInstance();
+	        				} catch (Exception e) {
+	        					e.printStackTrace();
+	        				} 
+	            		}
+	            		
+	            		String msgType = entry.getKey().getName();
 	                	MsgqPo msg = null;
 	                	do{
 		                	synchronized (TM_SYNC_KEY){
@@ -219,7 +286,7 @@ public class MsgqConsumer {
 		                		try {
 		                			Class<? extends Msgq> cls = (Class<? extends Msgq>) Class.forName(msg.getMsgType());
 		                			Msgq obj = JSON.parseObject(msg.getMsgContent(), cls);
-		                			entry.getValue().handleMsg(obj,msg.getMsgId());
+		                			//entry.getValue().handleMsg(obj,msg.getMsgId());
 		                			msgqMapper.deleteByPrimaryKey(msg.getMsgId());
 		                		}catch(Exception e) {
 		                			String str = JSONObject.toJSONString(e);
@@ -235,7 +302,9 @@ public class MsgqConsumer {
 	                	if(existThread > 0) {
 	                		existThread--;
 	                	}
+	                	
 	            	}
+	            	
 	            }
 	        });
         }
