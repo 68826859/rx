@@ -390,7 +390,7 @@
 
 
 .r-hidden{
-	display: none;
+	display: none !important;
 	height:0px;
 	overflow:hidden;
 }

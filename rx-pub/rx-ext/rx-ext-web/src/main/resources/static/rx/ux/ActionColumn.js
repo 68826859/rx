@@ -46,9 +46,9 @@ Ext.define('Rx.ux.ActionColumn', {
         		ret += '<div style="display:inline-block;line-height:1;" title="无权访问 '+tooltip+'">';
         		actionIdReIndex ='x-item-disabled';
         	}
-        	
+            
         	if(item.text){
-        		ret+='<div class="'+ me.actionIconCls + ' ' + actionIdReIndex +'" style="cursor:pointer;margin-left:4px;display:inline-block;border:1px solid #ddd;padding:2px;">';
+        		ret+='<div class="'+ me.actionIconCls + ' ' + actionIdReIndex + ' '+(item.getClass ? Ext.callback(item.getClass, item.scope || me.origScope, arguments, undefined, me) : '')+'" style="cursor:pointer;margin-left:4px;display:inline-block;border:1px solid #ddd;padding:2px;">';
         		/*
         		if(icon){
         			ret+='<span class="'+actionIdReIndex+'" style="display:inline-block;margin-left:-4px;">';

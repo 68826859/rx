@@ -2,6 +2,7 @@ package com.rx.spring.utils;
 
 import com.rx.base.service.BaseService;
 import com.rx.spring.SpringBaseService;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
@@ -77,14 +78,28 @@ public class SpringContextHelper implements ApplicationContextAware {
         return null;
     }
     
+    /**
+     * 获取对象泛型
+     * @param clazz
+     * @return
+     */
     
+    public static Class<?> getBeanActualType(Object obj, Class<?> targetClass,int index) {
+    	Class<?> cls;
+    	if(AopUtils.isAopProxy(obj)){
+    		cls = AopUtils.getTargetClass(obj);
+    	}else {
+    		cls = obj.getClass();
+    	}
+    	return SpringContextHelper.getClassActualType(cls,targetClass,0);
+    }
     /**
      * 获取类的泛型
      * @param clazz
      * @return
      */
     
-    public static Class<?> getBeanActualType(Class<?> clazz , Class<?> targetClass,int index) {
+    public static Class<?> getClassActualType(Class<?> clazz, Class<?> targetClass,int index) {
     	
     	if(targetClass.isInterface()){
     		Type[] types = clazz.getGenericInterfaces();
@@ -97,14 +112,18 @@ public class SpringContextHelper implements ApplicationContextAware {
 	    			}
 	    		}
     		}
+    		Class<?> res = null;
     		if(!clazz.isInterface()) {
     			if(clazz.getSuperclass() != Object.class) {
-        			return getBeanActualType(clazz.getSuperclass(),targetClass,index);
+        			res = getClassActualType(clazz.getSuperclass(),targetClass,index);
         		}
+    		}
+    		if(res != null) {
+    			return res;
     		}
     		Class<?>[] ss = clazz.getInterfaces();
 			for(Class<?> s:ss) {
-				Class<?> res = getBeanActualType(s,targetClass,index);
+				res = getClassActualType(s,targetClass,index);
 				if(res != null) {
 					return res;
 				}
@@ -113,7 +132,7 @@ public class SpringContextHelper implements ApplicationContextAware {
     		if(clazz.getSuperclass() == targetClass) {
     			return getSuperclassActualType(clazz,index);
     		} else if(clazz.getSuperclass() != Object.class) {
-    			return getBeanActualType(clazz.getSuperclass(),targetClass,index);
+    			return getClassActualType(clazz.getSuperclass(),targetClass,index);
     		}
     	}
         return null;

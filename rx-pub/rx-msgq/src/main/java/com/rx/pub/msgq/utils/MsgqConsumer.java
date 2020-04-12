@@ -40,7 +40,25 @@ public class MsgqConsumer {
     }
     
     
+    
+    private static Map<Class<?>,MsgqHandler<?>> handlers = new HashMap<Class<?>,MsgqHandler<?>>();
+    
+    public static void regHandler(MsgqHandler<?> handler) {
+    	
+    	Class<?> typeCls = SpringContextHelper.getBeanActualType(handler,MsgqHandler.class,0);
+    	
+    	handlers.put(typeCls, handler);
+    	
+    	MsgqConsumer client = SpringContextHelper.getBean(MsgqConsumer.class);
+    	if(client != null) {
+    		client.doInitTask();
+    	}
+    }
+    
+    /*
     private static Map<Class<?>,Class<? extends MsgqHandler<?>>> handlerTypes = new HashMap<Class<?>,Class<? extends MsgqHandler<?>>>();
+    
+    
     
     
     public static void regHandlerCls(Class<? extends MsgqHandler<?>> cls) {
@@ -54,6 +72,7 @@ public class MsgqConsumer {
     	if(client != null) {
     		client.doInitTask();
     	}
+    	
     	
     }
     
@@ -96,6 +115,8 @@ public class MsgqConsumer {
     	return null;
     }
     
+    */
+    
     @PostConstruct
     public void doInit() {
     	doInitTask();
@@ -103,7 +124,7 @@ public class MsgqConsumer {
     
     private void doInitTask() {
         	
-    	if(!handlerTypes.isEmpty()) {
+    	if(!handlers.isEmpty()) {
         	
     		if (future == null) {
 		    	future = threadPoolTaskScheduler.schedule(new Runnable() {
@@ -259,8 +280,8 @@ public class MsgqConsumer {
 	            	
 	            	MsgqHandler<?> handler;
 	            	
-	            	for(Entry<Class<?>, Class<? extends MsgqHandler<?>>> entry :handlerTypes.entrySet()) {
-	            		
+	            	for(Entry<Class<?>, MsgqHandler<?>> entry :handlers.entrySet()) {
+	            		/*
 	            		handler = SpringContextHelper.getBean(entry.getValue());
 	            		if(handler == null) {
 	            			try {
@@ -269,7 +290,8 @@ public class MsgqConsumer {
 	        					e.printStackTrace();
 	        				} 
 	            		}
-	            		
+	            		*/
+	            		handler = entry.getValue();
 	            		String msgType = entry.getKey().getName();
 	                	MsgqPo msg = null;
 	                	do{
@@ -299,12 +321,10 @@ public class MsgqConsumer {
 		                		}
 		                	}
 	                	}while(msg != null);
-	                	if(existThread > 0) {
-	                		existThread--;
-	                	}
-	                	
 	            	}
-	            	
+	            	if(existThread > 0) {
+                		existThread--;
+                	}
 	            }
 	        });
         }
