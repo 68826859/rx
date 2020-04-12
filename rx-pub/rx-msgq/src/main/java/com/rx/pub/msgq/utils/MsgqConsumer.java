@@ -1,6 +1,7 @@
 package com.rx.pub.msgq.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
@@ -41,9 +42,21 @@ public class MsgqConsumer {
     
     
     
-    private static Map<Class<?>,MsgqHandler<?>> handlers = new HashMap<Class<?>,MsgqHandler<?>>();
+    private static Map<Class<?>,MsgqHandler> handlers = new HashMap<Class<?>,MsgqHandler>();
     
-    public static void regHandler(MsgqHandler<?> handler) {
+    public static void regHandler(MsgqHandler handler) {
+    	
+    	List<Class<? extends Msgq>> typeCls = handler.supportMsgTypes();
+    	for(Class<? extends Msgq> type : typeCls) {
+    		handlers.put(type, handler);
+    	}
+    	MsgqConsumer client = SpringContextHelper.getBean(MsgqConsumer.class);
+    	if(client != null) {
+    		client.doInitTask();
+    	}
+    }
+    /*
+    public static void regHandler(MsgqHandler handler) {
     	
     	Class<?> typeCls = SpringContextHelper.getBeanActualType(handler,MsgqHandler.class,0);
     	
@@ -55,7 +68,7 @@ public class MsgqConsumer {
     	}
     }
     
-    /*
+    
     private static Map<Class<?>,Class<? extends MsgqHandler<?>>> handlerTypes = new HashMap<Class<?>,Class<? extends MsgqHandler<?>>>();
     
     
@@ -278,9 +291,9 @@ public class MsgqConsumer {
 	            @Override
 	            public void run() {
 	            	
-	            	MsgqHandler<?> handler;
+	            	MsgqHandler handler;
 	            	
-	            	for(Entry<Class<?>, MsgqHandler<?>> entry :handlers.entrySet()) {
+	            	for(Entry<Class<?>, MsgqHandler> entry :handlers.entrySet()) {
 	            		/*
 	            		handler = SpringContextHelper.getBean(entry.getValue());
 	            		if(handler == null) {
@@ -306,9 +319,9 @@ public class MsgqConsumer {
 		                    }
 		                	if(msg != null) {
 		                		try {
-		                			Class<? extends Msgq> cls = (Class<? extends Msgq>) Class.forName(msg.getMsgType());
-		                			Msgq obj = JSON.parseObject(msg.getMsgContent(), cls);
-		                			//entry.getValue().handleMsg(obj,msg.getMsgId());
+		                			Class<?> cls = Class.forName(msg.getMsgType());
+		                			Msgq obj = (Msgq)JSON.parseObject(msg.getMsgContent(), cls);
+		                			handler.handleMsg(obj , msg.getMsgId());
 		                			msgqMapper.deleteByPrimaryKey(msg.getMsgId());
 		                		}catch(Exception e) {
 		                			String str = JSONObject.toJSONString(e);
@@ -316,6 +329,7 @@ public class MsgqConsumer {
 		                				str = str.substring(0, 1024);
 		                			}
 		                			msgqMapper.updateByPrimaryKeySelective(new MsgqPo(msg.getMsgId()).setErrorMsg(str));
+		                			
 		                		}finally{
 		                			
 		                		}

@@ -1,7 +1,11 @@
 package com.rx.pub.msgq.base;
 
-public interface MsgqHandler<T extends Msgq> {
+import java.util.List;
+
+public interface MsgqHandler {
 	
 	
-	public void handleMsg(T msg,String msgId) throws Exception;
+	public List<Class<? extends Msgq>> supportMsgTypes();
+	
+	public void  handleMsg(Msgq msg,String msgId) throws Exception;
 }
