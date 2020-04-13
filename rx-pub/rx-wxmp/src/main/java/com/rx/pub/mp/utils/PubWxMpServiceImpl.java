@@ -94,7 +94,7 @@ public class PubWxMpServiceImpl implements PubWxMpService {
 			// String.valueOf(detailsId)).replace("openId", openid)); //点击跳转路径
 		}
 		WxMpTemplateMessage templateMessage = builder.build();
-		for (Map.Entry<String, String> entry : msg.getMpTemplateData().entrySet()) {
+		for (Map.Entry<String, String> entry : msg.mpTemplateData().entrySet()) {
 			templateMessage.addData(new WxMpTemplateData(entry.getKey(), entry.getValue(), "#999"));
 		}
 		try {
