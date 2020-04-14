@@ -7,7 +7,8 @@ public abstract class AbstractWxMpTemplateMsg implements WxMpTemplateMsg {
 
 	private String openId;
 	
-
+	private String templateUrl;
+	
 	@Override
 	public String getOpenId() {
 		return openId;
@@ -15,6 +16,14 @@ public abstract class AbstractWxMpTemplateMsg implements WxMpTemplateMsg {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getTemplateUrl() {
+		return templateUrl;
+	}
+
+	public void setTemplateUrl(String templateUrl) {
+		this.templateUrl = templateUrl;
 	}
 
 }
