@@ -95,6 +95,11 @@
 				<artifactId>rx-wxmp</artifactId>
 				<version>${rx.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.rx.pub</groupId>
+				<artifactId>rx-wxma</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>com.rx.pub</groupId>
