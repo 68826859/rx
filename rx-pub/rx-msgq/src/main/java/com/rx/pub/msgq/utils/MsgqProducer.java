@@ -28,14 +28,21 @@ public class MsgqProducer {
     }
     
     public static String sendMessage(Msgq msg,Date beginTime,Date endTime) {
-    	return sendMessage(msg,beginTime,endTime,null,false);
+    	return sendMessage(msg,beginTime,endTime,false,null,null);
     }
     
-    public static String sendMessage(Msgq msg,Date beginTime,Date endTime,String singleKey,boolean cover) {
+    public static String sendMessage(Msgq msg,Date beginTime,Date endTime,String groupKey) {
+    	return sendMessage(msg,beginTime,endTime,false,null,groupKey);
+    }
+    public static String sendMessage(Msgq msg,Date beginTime,Date endTime,boolean cover,String singleKey) {
+    	return sendMessage(msg,beginTime,endTime,cover,singleKey,null);
+    }
+    
+    public static String sendMessage(Msgq msg,Date beginTime,Date endTime,boolean cover,String singleKey,String groupKey) {
     	MsgqProducer client;
         try {
         	client = SpringContextHelper.getBean(MsgqProducer.class);
-        	return client.sendMsg(msg,beginTime,endTime,singleKey,cover);
+        	return client.sendMsg(msg,beginTime,endTime,cover,singleKey,groupKey);
         }catch (Exception ex){
         	ex.printStackTrace();
         }
@@ -47,14 +54,14 @@ public class MsgqProducer {
      * @param beginTime 消息被消费的开始时间
      * @param endTime 消息的过期时间
      * @param singleKey 独生键
-     * @param cover 如果设置独生键，是否覆盖
+     * @param cover 如果设置独生键，是否覆盖之前的消息。true，覆盖之前的消息，新加的消息有效。false，如果有旧的消息，旧的消息有效，新加的消息无效。
      */
-    public String sendMsg(Msgq msg,Date beginTime,Date endTime,String singleKey,boolean cover){
+    public String sendMsg(Msgq msg,Date beginTime,Date endTime,boolean cover,String singleKey,String groupKey){
     	
     	if(singleKey == null) {
 	    	synchronized (MSGQ_KEY){
 	    		MsgqPo msgp = new MsgqPo(null);
-	    		msgs.add(msgp.setMsgContent(JSON.toJSONString(msg)).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime));
+	    		msgs.add(msgp.setMsgContent(JSON.toJSONString(msg)).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime).setGroupKey(groupKey));
 	    		if (existThread < 2){
 	                existThread++; 
 	    	        taskExecutor.execute(new ProducerRunnable());
@@ -64,7 +71,7 @@ public class MsgqProducer {
     	}else {
 	    	synchronized (MSGQ_KEY_SINGLE){
 	    		MsgqPo msgp = new MsgqPo(null);
-	    		singleMsgs.add(msgp.setMsgContent(JSON.toJSONString(msg)).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime).setSingleKey(singleKey).setCover(cover));
+	    		singleMsgs.add(msgp.setMsgContent(JSON.toJSONString(msg)).setMsgType(msg.getClass().getName()).setBeginTime(beginTime).setEndTime(endTime).setSingleKey(singleKey).setCover(cover).setGroupKey(groupKey));
 	    		if (existThreadSingle < 2){
 	    			existThreadSingle++; 
 	    	        taskExecutor.execute(new ProducerSingleRunnable());
@@ -167,13 +174,6 @@ public class MsgqProducer {
 	            			CacheHelper.getCacher().put(nm, MSGQ_KEY);
 	            		}
 	            	}
-	            	/*
-	                String url = PropertiesHelper.getValue("WECHAT_SERVICE_URL") + "/wechat/templateMessage/postMessage";
-	                String jsonStr = HttpUtils.doPost(url);
-	                if (jsonStr == null) {
-	                    throw new BusinessException("请求微信服务器失败");
-	                }
-	                */
 	            } catch (Exception e) {
 	            	e.printStackTrace();
 	            }

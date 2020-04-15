@@ -19,9 +19,6 @@ import com.rx.ext.data.Model;
 @ExtClass(extend = Model.class, alternateClassName = "MsgqPo")
 public class MsgqPo{
 	
-	private static final long serialVersionUID = -5072022009762447747L;
-
-
 	public MsgqPo() {
 		
 	}
@@ -54,6 +51,11 @@ public class MsgqPo{
     @Column(name = "single_key")
     @ExtGridColumn(width=230)
     private String singleKey;
+    
+    @RxModelField(text = "分组键")
+    @Column(name = "group_key")
+    @ExtGridColumn(width=230)
+    private String groupKey;
     
     @RxModelField(text = "创建时间", datePattern = RxDatePattern.ISO8601Long)
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
@@ -155,6 +157,13 @@ public class MsgqPo{
 	}
 	public MsgqPo setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
+		return this;
+	}
+	public String getGroupKey() {
+		return groupKey;
+	}
+	public MsgqPo setGroupKey(String groupKey) {
+		this.groupKey = groupKey;
 		return this;
 	}
     

@@ -13,6 +13,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rx.base.utils.StringUtil;
@@ -229,14 +231,32 @@ public class MsgqConsumer {
     /**
      *	删除一个消息
      */
-    public static void delMessage(String msgId) {
+    public static int delMessage(String msgId) {
         try {
         	MsgqConsumer client = SpringContextHelper.getBean(MsgqConsumer.class);
-        	client.delMsg(msgId);
+        	return client.delMsg(msgId);
         }catch (Exception ex){
         	ex.printStackTrace();
         }
+        return 0;
     }
+    
+    
+    /**
+     *	删除分组消息
+     */
+    public static int delGroupMessage(String groupKey) {
+        try {
+        	if(StringUtils.hasText(groupKey)) {
+        		MsgqConsumer client = SpringContextHelper.getBean(MsgqConsumer.class);
+        		return client.delGroupMsg(groupKey);
+        	}
+        }catch (Exception ex){
+        	ex.printStackTrace();
+        }
+        return 0;
+    }
+    
     
     /*
     private static Map<Class<? extends Msgq>,MsgqHandler> senders =  new HashMap<Class<? extends Msgq>,MsgqHandler>();
@@ -264,9 +284,18 @@ public class MsgqConsumer {
     private static int existThread = 0;
     final private static String TM_SYNC_KEY = "MSGQ_CONSUMER_SYNC_KEY";
     
-    public void delMsg(String msgId){
-    	msgqMapper.deleteByPrimaryKey(msgId);
+    public int delMsg(String msgId){
+    	return msgqMapper.deleteByPrimaryKey(msgId);
     }
+    
+    public int delGroupMsg(String groupKey){
+    	
+    	MsgqPo dels = new MsgqPo();
+    	dels.setGroupKey(groupKey);
+    	
+    	return msgqMapper.delete(dels);
+    }
+    
     
     public Msgq getMsg(String msgId){
     	MsgqPo msg = msgqMapper.selectByPrimaryKey(msgId);
