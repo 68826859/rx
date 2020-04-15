@@ -299,6 +299,23 @@ public class Pager<T>  implements Serializable{
     public void setNavigateLastPage(int navigateLastPage) {
         this.navigateLastPage = navigateLastPage;
     }
+    
+	public boolean isFirstPage() {
+		return isFirstPage;
+	}
+
+	public void setFirstPage(boolean isFirstPage) {
+		this.isFirstPage = isFirstPage;
+	}
+
+	public boolean isLastPage() {
+		return isLastPage;
+	}
+
+	public void setLastPage(boolean isLastPage) {
+		this.isLastPage = isLastPage;
+	}
+    
 
     @Override
     public String toString() {
@@ -333,4 +350,61 @@ public class Pager<T>  implements Serializable{
         sb.append('}');
         return sb.toString();
     }
+    
+    
+   
+    /**
+     * 附件信息
+     */
+
+    private long attachmentLong;
+    
+    private double attachmentDouble;
+    
+    private String attachmentString;
+    
+    private List<?> attachmentList;
+    
+	private Object attachmentObject;
+    
+	public Object getAttachmentObject() {
+			return attachmentObject;
+	}
+
+	public void setAttachmentObject(Object attachmentObject) {
+		this.attachmentObject = attachmentObject;
+	}
+
+	public long getAttachmentLong() {
+		return attachmentLong;
+	}
+
+	public void setAttachmentLong(long attachmentLong) {
+		this.attachmentLong = attachmentLong;
+	}
+
+	public double getAttachmentDouble() {
+		return attachmentDouble;
+	}
+
+	public void setAttachmentDouble(double attachmentDouble) {
+		this.attachmentDouble = attachmentDouble;
+	}
+
+	public String getAttachmentString() {
+		return attachmentString;
+	}
+
+	public void setAttachmentString(String attachmentString) {
+		this.attachmentString = attachmentString;
+	}
+
+	public List<?> getAttachmentList() {
+		return attachmentList;
+	}
+
+	public void setAttachmentList(List<?> attachmentList) {
+		this.attachmentList = attachmentList;
+	}
+    
 }
