@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.rx.spring.utils.PropertiesHelper;
 
 public class DefaultJsonHttpMessageConverter extends FastJsonHttpMessageConverter{
 
@@ -55,7 +56,15 @@ public class DefaultJsonHttpMessageConverter extends FastJsonHttpMessageConverte
 			IgnoreNonFieldGetter	含义	
 			WriteEnumUsingName      含义
 		 */
-		fastJsonConfig.setSerializeFilters(new DataResultPropertyFilter(),new DisplayEnumAfterFilter());
+		
+		
+		String comment = PropertiesHelper.getValue("rx.show-rxmodel-comment", "true");
+		
+		if(Boolean.valueOf(comment)) {
+			fastJsonConfig.setSerializeFilters(new DataResultPropertyFilter(),new DisplayEnumAfterFilter(),new DataResultCommentAfterFilter());
+		}else {
+			fastJsonConfig.setSerializeFilters(new DataResultPropertyFilter(),new DisplayEnumAfterFilter());
+		}
 		
 		this.setFastJsonConfig(fastJsonConfig);
 		

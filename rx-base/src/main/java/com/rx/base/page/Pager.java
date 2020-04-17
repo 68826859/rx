@@ -65,6 +65,15 @@ public class Pager<T>  implements Serializable{
 
     public Pager() {
     }
+    
+    
+    private Class<T> resType;
+    
+    public Pager(Class<T> cls) {
+    	
+    	this.resType = cls;
+    	
+    }
 
     /**
      * 包装Page对象
@@ -405,6 +414,14 @@ public class Pager<T>  implements Serializable{
 
 	public void setAttachmentList(List<?> attachmentList) {
 		this.attachmentList = attachmentList;
+	}
+
+	public Class<T> getResType() {
+		return resType;
+	}
+
+	public void setResType(Class<T> resType) {
+		this.resType = resType;
 	}
     
 }
