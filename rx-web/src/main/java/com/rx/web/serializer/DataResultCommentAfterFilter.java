@@ -27,12 +27,19 @@ public class DataResultCommentAfterFilter extends AfterFilter{
 				DataResult ds = (DataResult)res;
 				Object object = ds.getData();
 				if(object != null) {
-					writeComment("@comment_data",object.getClass());
-				}
-			}else if(res instanceof Pager) {
-				Class<?> cls = ((Pager<?>)res).getResType();
-				if(cls != null) {
-					writeComment("@comment_list",cls);
+					if(object instanceof Pager) {
+						List<?> list = ((Pager<?>)object).getList();
+						if(list.size() == 0) {
+							Class<?> cls = ((Pager<?>)res).getDataType();
+							if(cls != null) {
+								writeComment("@comment_pager_list",cls);
+							}
+						}
+					}
+				}else{
+					if(ds.getDataType() != null) {
+						writeComment("@comment_data",ds.getDataType());
+					}
 				}
 			}else {
 				writeComment("@comment",res.getClass());

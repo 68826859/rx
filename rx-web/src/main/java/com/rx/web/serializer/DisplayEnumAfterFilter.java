@@ -13,7 +13,7 @@ import com.rx.base.model.annotation.RxModelField;
 public class DisplayEnumAfterFilter extends AfterFilter{
 
 	
-	private static String Enum_display_prefix = "display_";
+	private static String Enum_display_prefix = "rx_display_";
 	
 	@Override
 	public void writeAfter(Object object) {

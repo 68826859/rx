@@ -67,11 +67,11 @@ public class Pager<T>  implements Serializable{
     }
     
     
-    private Class<T> resType;
+    private Class<T> dataType;
     
     public Pager(Class<T> cls) {
     	
-    	this.resType = cls;
+    	this.setDataType(cls);
     	
     }
 
@@ -416,12 +416,13 @@ public class Pager<T>  implements Serializable{
 		this.attachmentList = attachmentList;
 	}
 
-	public Class<T> getResType() {
-		return resType;
+	public Class<T> getDataType() {
+		return dataType;
 	}
 
-	public void setResType(Class<T> resType) {
-		this.resType = resType;
+	public void setDataType(Class<T> dataType) {
+		this.dataType = dataType;
 	}
+
     
 }
