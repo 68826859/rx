@@ -2,7 +2,6 @@ package com.rx.web.serializer;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class DataResultCommentAfterFilter extends AfterFilter{
 					if(object instanceof Pager) {
 						List<?> list = ((Pager<?>)object).getList();
 						if(list.size() == 0) {
-							Class<?> cls = ((Pager<?>)res).getDataType();
+							Class<?> cls = ((Pager<?>)object).getDataType();
 							if(cls != null) {
 								writeComment("@comment_pager_list",cls);
 							}
@@ -56,7 +55,8 @@ public class DataResultCommentAfterFilter extends AfterFilter{
 	        int len = list.size();
 	        Class<?> tarClazz = null;
 	        
-	        Map<String,Object> comment = new HashMap<String,Object>();
+	        Map<String,Object> comment = new LinkedHashMap<String,Object>();
+	        comment.put("@class",cls.getName());
 	        for (int i = len - 1; i >= 0; i--) {
 	            tarClazz = list.get(i);
 	            Field[] fields = tarClazz.getDeclaredFields();
@@ -72,9 +72,9 @@ public class DataResultCommentAfterFilter extends AfterFilter{
 	                		for (Showable<?> item: (Showable[])mf.em().getEnumConstants()) {
 	                			comment3.put(item.display(), item.value());
 				    		}
-	                		comment2.put("comment", mf.text());
+	                		comment2.put("@class", mf.em().getName());
 	                		comment2.put("type", "enum");
-	                		comment2.put("class", mf.em().getName());
+	                		comment2.put("comment", mf.text());
 	                		comment2.put("items", comment3);
 	                		comment.put(field.getName(),comment2);
 	                	}else {
