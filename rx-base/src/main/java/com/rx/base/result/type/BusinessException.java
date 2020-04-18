@@ -15,6 +15,41 @@ public class BusinessException extends DataResult {
 
 	private final static String DEFAULT_MSG = "业务异常";
 
+	public static void notNull(Object object, String message) {
+		if (object == null) {
+			throw new BusinessException(message);
+		}
+	}
+	public static void isNull(Object object, String message) {
+		if (object != null) {
+			throw new BusinessException(message);
+		}
+	}
+	public static void isTrue(boolean expression, String message) {
+		if (!expression) {
+			throw new BusinessException(message);
+		}
+	}
+	public static void hasText(String text, String message) {
+		if (hasText(text)) {
+			throw new BusinessException(message);
+		}
+	}
+	private static boolean hasText(String str) {
+		return (str != null && !str.isEmpty() && containsText(str));
+	}
+
+	private static boolean containsText(CharSequence str) {
+		int strLen = str.length();
+		for (int i = 0; i < strLen; i++) {
+			if (!Character.isWhitespace(str.charAt(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	public BusinessException() {
 		super(DEFAULT_MSG, AlertTypeEnum.无需关闭的错误3);
 		this.setCode(DEFAULT_CODE);
