@@ -52,10 +52,6 @@ public class MsgqConsumer {
     	for(Class<? extends Msgq> type : typeCls) {
     		handlers.put(type, handler);
     	}
-    	MsgqConsumer client = SpringContextHelper.getBean(MsgqConsumer.class);
-    	if(client != null) {
-    		client.doInitTask();
-    	}
     }
     /*
     public static void regHandler(MsgqHandler handler) {
@@ -134,7 +130,21 @@ public class MsgqConsumer {
     
     @PostConstruct
     public void doInit() {
-    	doInitTask();
+    	taskExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+            	
+            	try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            	
+            	doInitTask();
+            }
+    	});
     }
     
     private void doInitTask() {
