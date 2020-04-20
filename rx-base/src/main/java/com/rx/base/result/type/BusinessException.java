@@ -31,7 +31,7 @@ public class BusinessException extends DataResult {
 		}
 	}
 	public static void hasText(String text, String message) {
-		if (hasText(text)) {
+		if (!hasText(text)) {
 			throw new BusinessException(message);
 		}
 	}
