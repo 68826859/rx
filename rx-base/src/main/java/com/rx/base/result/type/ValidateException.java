@@ -33,7 +33,7 @@ public class ValidateException extends DataResult {
 		}
 	}
 	public static void hasText(String text, String message) {
-		if (hasText(text)) {
+		if (!hasText(text)) {
 			throw new ValidateException(message);
 		}
 	}
