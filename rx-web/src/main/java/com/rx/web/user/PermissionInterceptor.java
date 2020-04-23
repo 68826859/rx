@@ -59,7 +59,8 @@ public class PermissionInterceptor{
                 	}else {
                 		addMapUserPermission(map,ucls,ps);
                 	}
-                    //permissionHandler(, an, PermissionMgr.getAnnotationUserTypes(an));
+                }else {
+                    permissionAnHandler(an);
                 }
             }
             if(map != null) {
@@ -125,6 +126,11 @@ public class PermissionInterceptor{
         }
     }
 	
+    
+    protected void permissionAnHandler(Annotation an) throws Exception {
+        
+    }
+    
     protected boolean permissionHandler(RxUser<?> user,String permissions) throws Exception {
         return checkUserType(user,permissions);
     }
