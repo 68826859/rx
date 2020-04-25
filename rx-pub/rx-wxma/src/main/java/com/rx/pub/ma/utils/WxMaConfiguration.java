@@ -59,6 +59,7 @@ public class WxMaConfiguration {
         config.setToken(WxMaAccount.getToken());
         config.setAesKey(WxMaAccount.getAesKey());
         config.setMsgDataFormat("JSON");
+        service.setWxMaConfig(config);
         maServices.put(WxMaAccount.getAppId(), service);
     }
 
