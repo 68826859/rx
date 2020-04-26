@@ -95,7 +95,7 @@ public class PubWxMpServiceImpl implements PubWxMpService {
 		}
 		WxMpTemplateMessage templateMessage = builder.build();
 		for (Map.Entry<String, String> entry : msg.mpTemplateData().entrySet()) {
-			templateMessage.addData(new WxMpTemplateData(entry.getKey(), entry.getValue(), "#999"));
+			templateMessage.addData(new WxMpTemplateData(entry.getKey(), entry.getValue(), "#333"));
 		}
 		try {
 			getWxMpService().getTemplateMsgService().sendTemplateMsg(templateMessage);
