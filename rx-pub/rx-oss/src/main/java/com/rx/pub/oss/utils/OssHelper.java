@@ -1,20 +1,39 @@
 package com.rx.pub.oss.utils;
 
+
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.HttpMethod;
+import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.comm.Protocol;
-import com.aliyun.oss.common.utils.IOUtils;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.auth.sts.AssumeRoleRequest;
+import com.aliyuncs.auth.sts.AssumeRoleResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.http.ProtocolType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import com.aliyuncs.sts.model.v20150401.AssumeRoleRequest;
-import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
+import com.aliyuncs.utils.IOUtils;
 import com.rx.base.cache.CacheHelper;
 import com.rx.base.file.FileAccessEnum;
 import com.rx.base.result.type.BusinessException;
@@ -23,16 +42,6 @@ import com.rx.pub.oss.enm.FileTypeEnum;
 import com.rx.pub.oss.enm.OssBucketEnum;
 import com.rx.spring.utils.PropertiesHelper;
 import com.rx.spring.utils.SpringContextHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @Description: OSS上传
@@ -109,21 +118,20 @@ public class OssHelper {
 			refreshClient();
 		}*/
         //Map<String, String> respMap = new HashMap<String, String>();
-        OSSClient ossClient = null;
+        OSS ossClient = null;
         try {
             //respMap = assumeRole();
             //ClientConfiguration configuration = new ClientConfiguration();
             //configuration.setProtocol(Protocol.HTTPS);
             //ossClient = new OSSClient(PropertiesHelper.getValue(endpoint), respMap.get("AccessKeyId"), respMap.get("AccessKeySecret"), respMap.get("SecurityToken"), configuration);
         	String ep = PropertiesHelper.getValue(endpoint);
-        	
-        	ossClient = new OSSClient(PropertiesHelper.getValue(endpoint), PropertiesHelper.getValue(accessKeyId), PropertiesHelper.getValue(accessKeySecret));
-            ossClient.putObject(bucketEnum.getBucketName(), keySuffixWithSlash, is);
+        	ossClient =  new OSSClientBuilder().build(ep, PropertiesHelper.getValue(accessKeyId), PropertiesHelper.getValue(accessKeySecret));
+        	//ossClient.putObject(bucketEnum.getBucketName(), keySuffixWithSlash, is);
         } catch (Exception e) {
             log.warn(e.getMessage(), e);
             throw new BusinessException("文件上传异常");
         } finally {
-            IOUtils.safeClose(is);
+            IOUtils.closeQuietly(is);
             if (ossClient != null) {
                 ossClient.shutdown();
             }
@@ -144,19 +152,17 @@ public class OssHelper {
 			refreshClient();
 		}*/
         //Map<String, String> respMap = new HashMap<String, String>();
-        OSSClient ossClient = null;
+        OSS ossClient = null;
         try {
-            //respMap = assumeRole();
-            //ClientConfiguration configuration = new ClientConfiguration();
-            //configuration.setProtocol(Protocol.HTTPS);
-            //ossClient = new OSSClient(PropertiesHelper.getValue(endpoint), respMap.get("AccessKeyId"), respMap.get("AccessKeySecret"), respMap.get("SecurityToken"), configuration);
-            ossClient = new OSSClient(PropertiesHelper.getValue(endpoint), PropertiesHelper.getValue(accessKeyId), PropertiesHelper.getValue(accessKeySecret));
+            ossClient = new OSSClientBuilder().build(PropertiesHelper.getValue(endpoint), PropertiesHelper.getValue(accessKeyId), PropertiesHelper.getValue(accessKeySecret));
+            
+            //ossClient.putObject("", "", new ByteArrayInputStream("Hello OSS".getBytes()));
             ossClient.putObject(bucketEnum.getBucketName(), keySuffixWithSlash, is);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.warn(e.getMessage(), e);
             throw new BusinessException("文件上传异常");
         } finally {
-            IOUtils.safeClose(is);
+            IOUtils.closeQuietly(is);
             if (ossClient != null) {
                 ossClient.shutdown();
             }
