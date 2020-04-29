@@ -42,7 +42,7 @@
         <!--新增微信小程序组件-->
 		  <groupId>com.github.binarywang</groupId>
 		  <artifactId>weixin-java-miniapp</artifactId>
-		  <version>3.3.0</version>
+		  <version>3.7.0</version>
 		  <exclusions>
                 <exclusion>
                     <artifactId>slf4j-api</artifactId>

@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.rx.pub.ma.base.WxMaAccount;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
-import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
+import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
 
 /**
  */
@@ -53,7 +53,8 @@ public class WxMaConfiguration {
     public static void regMaService(WxMaAccount WxMaAccount) {
     	
     	WxMaServiceImpl service = new WxMaServiceImpl();
-    	WxMaInMemoryConfig config = new WxMaInMemoryConfig();
+    	//WxMaInMemoryConfig config = new WxMaInMemoryConfig();
+    	WxMaDefaultConfigImpl config = new WxMaDefaultConfigImpl();
         config.setAppid(WxMaAccount.getAppId());
         config.setSecret(WxMaAccount.getAppSecret());
         config.setToken(WxMaAccount.getToken());
