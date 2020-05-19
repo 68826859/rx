@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rx</groupId>
 	<artifactId>rx</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.5</version>
 	<packaging>pom</packaging>
 	<name>rx</name>
 
@@ -15,7 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<rx.version>1.0.4</rx.version>
+		<rx.version>1.0.5</rx.version>
 		<swagger.version>2.9.2</swagger.version>
 		<skipTests>true</skipTests>
 	</properties>
@@ -300,4 +300,13 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>http://192.168.127.101:8081/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+	
+	
 </project>

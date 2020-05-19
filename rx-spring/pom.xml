@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.rx</groupId>
 		<artifactId>rx</artifactId>
-		<version>1.0.4</version>
+		<version>1.0.5</version>
 	</parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -12,8 +12,7 @@
   <name>rx-spring</name>
   
 	<dependencies>
-		
-
+	
 		<dependency>
 			<groupId>com.rx</groupId>
 			<artifactId>rx-base</artifactId>

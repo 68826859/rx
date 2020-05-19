@@ -30,6 +30,7 @@ public interface RxModelSelecter extends RxModelApplyer {
             List<?> list = (List<?>) result;
             if (!list.isEmpty()) {
                 for (Object o : list) {
+                	if(o != null)
                 	afterSelectModelOne(obj,o.getClass(),o);
                 }
             }
