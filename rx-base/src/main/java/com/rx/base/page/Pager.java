@@ -15,9 +15,9 @@ public class Pager<T>  implements Serializable{
     //由于startRow和endRow不常用，这里说个具体的用法
     //可以在页面中"显示startRow到endRow 共size条数据"
     //当前页面第一个元素在数据库中的行号
-    private int startRow;
+    private long startRow;
     //当前页面最后一个元素在数据库中的行号
-    private int endRow;
+    private long endRow;
     //总页数
     private int pages;
     //前一页
@@ -205,19 +205,19 @@ public class Pager<T>  implements Serializable{
         this.size = size;
     }
 
-    public int getStartRow() {
+    public long getStartRow() {
         return startRow;
     }
 
-    public void setStartRow(int startRow) {
+    public void setStartRow(long startRow) {
         this.startRow = startRow;
     }
 
-    public int getEndRow() {
+    public long getEndRow() {
         return endRow;
     }
 
-    public void setEndRow(int endRow) {
+    public void setEndRow(long endRow) {
         this.endRow = endRow;
     }
 
