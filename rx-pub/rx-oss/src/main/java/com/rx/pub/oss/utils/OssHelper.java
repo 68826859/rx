@@ -56,6 +56,8 @@ public class OssHelper {
     private final static String accessKeyId = "ACCESS_KEY_ID";
     private final static String accessKeySecret = "ACCESS_KEY_SECRET";
 
+    private final static String bucket="BUCKET";
+    
     //private final static String oss_Bucket = PropertiesHelper.getValue("BUCKET");
     private final static String suff = "SUFF";
 
@@ -169,6 +171,27 @@ public class OssHelper {
         }
         return keySuffixWithSlash;
     }
+    
+    
+    public static String simpleUpload3(InputStream is, FileAccessEnum accessEnum, String path) {
+        OSS ossClient = null;
+        try {
+            ossClient = new OSSClientBuilder().build(PropertiesHelper.getValue(endpoint), PropertiesHelper.getValue(accessKeyId), PropertiesHelper.getValue(accessKeySecret));
+            
+            //ossClient.putObject("", "", new ByteArrayInputStream("Hello OSS".getBytes()));
+            ossClient.putObject(PropertiesHelper.getValue(bucket), path, is);
+        } catch (RuntimeException e) {
+            log.warn(e.getMessage(), e);
+            throw new BusinessException("文件上传异常");
+        } finally {
+            IOUtils.closeQuietly(is);
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+        return path;
+    }
+    
     
 
     /**
