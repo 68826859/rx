@@ -3,9 +3,9 @@ package com.rx.pub.mp.utils;
 import java.util.Map;
 import com.google.common.collect.Maps;
 import com.rx.pub.mp.base.WxMpAccount;
-import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
+import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 
 /**
  */
@@ -53,12 +53,12 @@ public class WxMpConfiguration {
     public static void regMpService(WxMpAccount wxMpAccount) {
     	
     	WxMpServiceImpl service = new WxMpServiceImpl();
-    	WxMpInMemoryConfigStorage configStorage = new WxMpInMemoryConfigStorage();
+    	WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
         configStorage.setAppId(wxMpAccount.getAppId());
         configStorage.setSecret(wxMpAccount.getAppSecret());
         configStorage.setToken(wxMpAccount.getToken());
         configStorage.setAesKey(wxMpAccount.getAesKey());
-        //configStorage.set("JSON");
+        //configStorage.set
         service.setWxMpConfigStorage(configStorage);
         mpServices.put(wxMpAccount.getAppId(), service);
     }

@@ -17,6 +17,13 @@ public interface WxMpTemplateMsg extends Serializable {
     
     String getTemplateUrl();
     
-    Map<String, String> mpTemplateData();
+    Map<String, String> getTemplateData();
+    Map<String, String> getTemplateDataColor();
+    
+    String getMiniAppId();
+    
+    String getMiniPagePath();
+    
+    boolean getMiniUsePath();
 
 }

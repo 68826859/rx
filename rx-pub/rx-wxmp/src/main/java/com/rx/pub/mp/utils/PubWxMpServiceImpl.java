@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSON;
 import com.rx.pub.mp.base.PubWxMpService;
 import com.rx.pub.mp.base.WxMpTemplateMsg;
-import com.rx.pub.mp.utils.WxMpMgr;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage.MiniProgram;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage.WxMpTemplateMessageBuilder;
 
 /**
@@ -75,36 +75,28 @@ public class PubWxMpServiceImpl implements PubWxMpService {
 	
 	
 	@Override
-	public void sendMpTemplateMessage(WxMpTemplateMsg msg) {
+	public void sendMpTemplateMessage(WxMpTemplateMsg msg) throws Exception {
 		WxMpTemplateMessageBuilder builder = WxMpTemplateMessage.builder().toUser(msg.getOpenId()) // 推送用户
 				.templateId(msg.getTemplateId()); // 发送的消息模板ID
-		if (msg.getTemplateUrl() != null) {
-			String urlString = msg.getTemplateUrl();
-
-			/*
-			if (urlData != null) {
-				for (Map.Entry<String, String> entry : urlData.entrySet()) {
-					urlString = urlString.replace(entry.getKey(), entry.getValue());
-				}
-			}
-			*/
-			builder = builder.url(urlString);
-
-			// builder = builder.url(template.getTemplateUrl().replace("DetailsId",
-			// String.valueOf(detailsId)).replace("openId", openid)); //点击跳转路径
+		String url = msg.getTemplateUrl();
+		if (url != null) {
+			builder = builder.url(url);
 		}
 		WxMpTemplateMessage templateMessage = builder.build();
-		for (Map.Entry<String, String> entry : msg.mpTemplateData().entrySet()) {
-			templateMessage.addData(new WxMpTemplateData(entry.getKey(), entry.getValue(), "#333"));
+		Map<String, String> colors = msg.getTemplateDataColor();
+		for (Map.Entry<String, String> entry : msg.getTemplateData().entrySet()) {
+			templateMessage.addData(new WxMpTemplateData(entry.getKey(), entry.getValue(), colors==null?null:colors.get(entry.getKey())));
 		}
-		try {
-			getWxMpService().getTemplateMsgService().sendTemplateMsg(templateMessage);
-		} catch (Exception e) {
-			logger.error("模板消息发送失败");
-			e.printStackTrace();
-		} finally {
-			// 处理发送记录
+		
+		String appId = msg.getMiniAppId();
+		if(appId != null) {
+			MiniProgram miniProgram = new MiniProgram();
+			miniProgram.setAppid(msg.getMiniAppId());
+			miniProgram.setPagePath(msg.getMiniPagePath());
+			miniProgram.setUsePath(msg.getMiniUsePath());
+			templateMessage.setMiniProgram(miniProgram);
 		}
+		getWxMpService().getTemplateMsgService().sendTemplateMsg(templateMessage);
 	}
 
 	

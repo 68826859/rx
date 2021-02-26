@@ -42,7 +42,7 @@
         <!--新增微信公众号组件-->
 		  <groupId>com.github.binarywang</groupId>
 		  <artifactId>weixin-java-mp</artifactId>
-		  <version>3.3.0</version>
+		  <version>3.7.0</version>
 		</dependency>
 		
 	</dependencies>

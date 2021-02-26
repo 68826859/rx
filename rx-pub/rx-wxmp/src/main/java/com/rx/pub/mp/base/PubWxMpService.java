@@ -2,7 +2,6 @@ package com.rx.pub.mp.base;
 
 
 import java.util.Map;
-import com.rx.pub.mp.base.WxMpTemplateMsg;
 import me.chanjar.weixin.mp.api.WxMpService;
 
 /**
@@ -44,6 +43,6 @@ public interface PubWxMpService {
 	 * 发送模板消息
 	 * @param template
 	 */
-	void sendMpTemplateMessage(WxMpTemplateMsg msg);
+	void sendMpTemplateMessage(WxMpTemplateMsg msg) throws Exception;
 
 }

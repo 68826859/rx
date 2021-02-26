@@ -42,7 +42,7 @@ public class MsgqConsumer {
        return new ThreadPoolTaskScheduler();
     }
     
-    
+    public static int ERRORMSG_LEN = 1024;
     
     private static Map<Class<?>,MsgqHandler> handlers = new HashMap<Class<?>,MsgqHandler>();
     
@@ -364,11 +364,11 @@ public class MsgqConsumer {
 		                			msgqMapper.deleteByPrimaryKey(msg.getMsgId());
 		                		}catch(Exception e) {
 		                			String str = JSONObject.toJSONString(e);
-		                			if(str.length() > 1024) {
-		                				str = str.substring(0, 1024);
+		                			if(str.length() > ERRORMSG_LEN) {
+		                				str = str.substring(0, ERRORMSG_LEN);
 		                			}
 		                			msgqMapper.updateByPrimaryKeySelective(new MsgqPo(msg.getMsgId()).setErrorMsg(str));
-		                			
+		                			new MsgqConsumerErrorMsg(msg.getMsgId(),e.getMessage()).send();
 		                		}finally{
 		                			
 		                		}
