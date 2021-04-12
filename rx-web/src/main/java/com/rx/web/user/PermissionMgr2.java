@@ -6,19 +6,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+
 import com.rx.base.user.RxPermissionable;
-import com.rx.base.user.RxUserable;
-import com.rx.spring.utils.SpringContextHelper;
 
-public class PermissionMgr {
-
-	/*
+public class PermissionMgr2 {
 	private static Map<Class<? extends Annotation>, List<RxPermissionable>> permissionItems = new HashMap<>();
-	*/
+
 	private static Map<Class<? extends Annotation>, Class<? extends Enum<? extends RxPermissionable>>> permissionEnums = new HashMap<>();
 	
-	private static Map<Class<? extends Annotation>, Class<? extends RxUserable>> annotationUserTypes = new HashMap<>();
+	
+	private static Map<Class<? extends Annotation>, Class<? extends RxUser>> annotationUserTypes = new HashMap<>();
 
 	public static void registerPermissions(Class<? extends Annotation> an,Class<? extends Enum<? extends RxPermissionable>> es){
 		registerPermissions(an,es,null);
@@ -27,7 +26,7 @@ public class PermissionMgr {
 	/*
 	 * 注册权限点，userType为空表示注册给所有人
 	 */
-	public static void registerPermissions(Class<? extends Annotation> an,Class<? extends Enum<? extends RxPermissionable>> es,Class<? extends RxUserable> userType){
+	public static void registerPermissions(Class<? extends Annotation> an,Class<? extends Enum<? extends RxPermissionable>> es,Class<? extends RxUser> userType){
 		permissionEnums.put(an, es);
 		annotationUserTypes.put(an, userType);
 		RxPermissionable[] em = (RxPermissionable[]) es.getEnumConstants();
@@ -38,8 +37,7 @@ public class PermissionMgr {
 			}
 			list.add(ee);
 		}
-		SpringContextHelper.getBean(PermissionPersistencer.class).regPermission(list,userType);
-		//permissionItems.put(an, list);
+		permissionItems.put(an, list);
 	}
 	
 	private static boolean hasCode(ArrayList<RxPermissionable> list,String code) {
@@ -104,22 +102,56 @@ public class PermissionMgr {
 		return null;
 	}
 	
+
+	/*
+	public static List<PermissionItem> getAllPermissionItems() {
+		Class<?> cls = RxUser.getUser().getClass();
+		cls.getName();
+		return getAllPermissionItems(RxUser.getUser().getClass());
+	}
+	*/
 	
-	public static List<? extends RxPermissionable> getAllPermissionItems() {
+	public static List<RxPermissionable> getAllPermissionItems() {
 		return getAllPermissionItems(RxUser.getUser().getClass());
 	}
 	
-	public static List<? extends RxPermissionable> getAllPermissionItems(Class<? extends RxUserable> userType) {
-		return SpringContextHelper.getBean(PermissionPersistencer.class).getAllPermissionItems(userType);
+	public static List<RxPermissionable> getAllPermissionItems(Class<? extends RxUser> userType) {
+		List<RxPermissionable> allPermissionItem = new ArrayList<RxPermissionable>();
+		for (Entry<Class<? extends Annotation>, Class<? extends RxUser>> entry : annotationUserTypes.entrySet()) {
+			Class<? extends RxUser> cls = entry.getValue();
+			if(cls == null || cls == userType) {
+				for(RxPermissionable item : permissionItems.get(entry.getKey())) {
+					allPermissionItem.add(new PermissionEntity(item));
+				}
+			}
+		}
+		return allPermissionItem;
 	}
 	
+	public static PermissionEntity getPermissionEntity(String code) {
+		for (Map.Entry<Class<? extends Annotation>, List<RxPermissionable>> item:permissionItems.entrySet()) {
+			for(RxPermissionable pItem : item.getValue()) {
+				if(pItem.getId().equals(code)) {
+					return new PermissionEntity(pItem);
+				}
+			}
+		}
+		return null;
+	}
+	
+	
+
+	/*
+	 * public static List<PermissionItem> getPermissions(Class<? extends Annotation>
+	 * an){ return permissionItems.get(an); }
+	 */
 
 	public static Class<? extends Enum<? extends RxPermissionable>> getPermissionEnum(Class<? extends Annotation> an) {
 		return permissionEnums.get(an);
 	}
 	
-	public static Class<? extends RxUserable> getAnnotationUserTypes(Annotation an) {
-		Class<? extends RxUserable> cls = null;
+	public static  Class<? extends RxUser> getAnnotationUserTypes(Annotation an) {
+		Class<? extends RxUser> cls = null;
 		if(an.annotationType() == RxPermission.class) {
 			cls = ((RxPermission)an).type();
 			if( cls == RxUser.class) {

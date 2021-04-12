@@ -135,6 +135,6 @@ public interface RxUser<T extends HttpSession> extends RxUserable {
     public T getMySession(boolean autoCreate);
 
     
-    public List<RxPermissionable> getMyPermissions();
+    public List<? extends RxPermissionable> getMyPermissions();
 
 }

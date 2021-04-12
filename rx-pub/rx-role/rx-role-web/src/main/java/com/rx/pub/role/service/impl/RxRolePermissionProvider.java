@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -51,7 +52,7 @@ public class RxRolePermissionProvider implements RxPermissionProvider,RxRolePerm
     
     
 	@Override
-	public List<RxPermissionable> getUserPermissions(RxUserable user) {
+	public List<? extends RxPermissionable> getUserPermissions(RxUserable user) {
 		
 		RxUser<?> user2 = (RxUser<?>)user;
 		
@@ -96,14 +97,20 @@ public class RxRolePermissionProvider implements RxPermissionProvider,RxRolePerm
 				resources.remove(rrp.getResourceId());
 			}
 			List<RxPermissionable> allPermissionItem = new ArrayList<RxPermissionable>();
+			
+			List<? extends RxPermissionable> list = PermissionMgr.getAllPermissionItems(user2.getClass());
 			for(String resId : resources) {
-				allPermissionItem.add(PermissionMgr.getPermissionEntity(resId));
-				
+				for(RxPermissionable item : list) {
+					if(resId.equals(item.getId())) {
+						allPermissionItem.add(item);
+					}
+				}
 			}
 			return allPermissionItem;
 		}
 	}
-
+	
+	
 	@Override
 	public void addUserRole(RxUserable user, RxRoleable role) {
 		// TODO Auto-generated method stub
@@ -118,11 +125,24 @@ public class RxRolePermissionProvider implements RxPermissionProvider,RxRolePerm
 		}
 		List<PubRoleResourcePo> list = pubRoleResourceService.getListRoleResourceByRole(role, roleResourceReverseEumn);
 		List<PubRoleResourceDto> res = new ArrayList<PubRoleResourceDto>();
+		List<? extends RxPermissionable> items = PermissionMgr.getAllPermissionItems(null);
+		
 		for(PubRoleResourcePo po : list) {
-			res.add(new PubRoleResourceDto(po));
+			PubRoleResourceDto dto = new PubRoleResourceDto();
+			dto.setRoleResourceRef(po.getRoleResourceRef());
+			dto.setRoleId(po.getRoleId());
+			dto.setReverse(po.getReverse());
+			dto.setResourceId(po.getResourceId());
+			for(RxPermissionable pn : items) {
+				if(Objects.equals(pn.getId(), po.getResourceId())) {
+					dto.setName(pn.getName());
+					dto.setGroup(pn.getGroup());
+					dto.setDesc(pn.getDesc());
+				}
+			}
+	        res.add(dto);
 		}
 		return res;
 	}
-	
 	
 }

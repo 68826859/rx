@@ -31,7 +31,7 @@ public abstract class RxUserAbstract<T extends HttpSession> implements RxUser<T>
 	@Transient
 	@JSONField(serialize = false)
 	//@JsonIgnore
-	private List<RxPermissionable> myPermissions = null;
+	private List<? extends RxPermissionable> myPermissions = null;
 	
 	
     public String getSsoKey() {
@@ -165,7 +165,7 @@ public abstract class RxUserAbstract<T extends HttpSession> implements RxUser<T>
 	}
 	
 	
-	public List<RxPermissionable> getMyPermissions(){
+	public List<? extends RxPermissionable> getMyPermissions(){
 		if(this.myPermissions == null) {
 			this.myPermissions = SpringContextHelper.getBean(RxPermissionProvider.class).getUserPermissions(this);
 		}

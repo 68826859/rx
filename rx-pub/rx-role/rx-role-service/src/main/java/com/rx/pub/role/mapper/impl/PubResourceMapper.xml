@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rx.pub.role.mapper.PubResourceMapper">
+
+    <sql id="condition">
+        <if test="param.resourceId != null and param.resourceId != ''">
+            AND resource_id LIKE  CONCAT('%', #{param.resourceId},'%') 
+            </if>
+        <if test="param.resourceName != null and param.resourceName != ''">
+            AND resource_name LIKE  CONCAT('%', #{param.resourceName},'%') 
+            </if>
+        <if test="param.groupName != null and param.groupName != ''">
+            AND group_name LIKE  CONCAT('%', #{param.groupName},'%') 
+            </if>
+        <if test="param.descp != null and param.descp != ''">
+            AND descp LIKE  CONCAT('%', #{param.descp},'%') 
+            </if>
+        <if test="param.seq != null">
+            AND seq = #{param.seq}
+            </if>
+      
+        <if test="param.andIdsIn != null and param.andIdsIn.length > 0">
+           AND resource_id IN
+           <foreach collection="andIdsIn" item="id" index="index" open="(" close=")" separator=",">
+	        #{id}
+	       </foreach>
+        </if>
+        <if test="param.andIdsNotIn != null and param.andIdsNotIn.length > 0 ">
+            AND resource_id  NOT IN
+           <foreach collection="andIdsNotIn" item="id" index="index" open="(" close=")" separator=",">
+	        #{id}
+	       </foreach>
+        </if>
+    </sql>
+
+
+    <select id="searchList" resultType="com.rx.pub.role.dto.PubResourceDto">
+        SELECT * FROM pub_resource
+        <where>
+            1 = 1
+            <include refid="condition"></include>
+        </where>
+    </select>
+
+</mapper>
