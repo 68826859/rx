@@ -1,6 +1,6 @@
 package com.rx.pub.msgq.utils;
 
-import com.rx.pub.msgq.base.Msgq;
+import com.rx.base.msgq.Msgq;
 
 public class MsgqConsumerErrorMsg implements Msgq {
 

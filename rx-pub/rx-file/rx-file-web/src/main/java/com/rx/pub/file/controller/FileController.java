@@ -18,6 +18,7 @@ import com.rx.base.result.DataResult;
 import com.rx.base.result.type.BusinessException;
 import com.rx.base.result.type.ValidateException;
 import com.rx.base.utils.StringUtil;
+import com.rx.base.bean.RxBeanHelper;
 import com.rx.base.cache.CacheHelper;
 import com.rx.ext.annotation.ExtClass;
 import com.rx.extrx.spring.SpringProvider;
@@ -173,7 +174,7 @@ public class FileController {
     		throw new BusinessException("读取文件流异常.");
     	}
     	// 持久化图片
-		String path = SpringContextHelper.getBean(RxFilePersistencer.class).save(FileAccessEnum.findByValue(fileAccess,FileAccessEnum.公共读),in_b,filePrefix,fileExtName);
+		String path = RxBeanHelper.getFactoryBean(RxFilePersistencer.class).save(FileAccessEnum.findByValue(fileAccess,FileAccessEnum.公共读),in_b,filePrefix,fileExtName);
         String id = DigestUtils.md5DigestAsHex(in_b);
     	RxFile record = rxFileService.selectByPrimaryKey(id);
     	RxFile record2 = new RxFile();
@@ -224,7 +225,7 @@ public class FileController {
         if("image".equals(typeSuffix) && ((width != null && width.intValue() != 0) || (height != null && height.intValue() != 0))) {
         	bytes = ImageUtil.scaleImage(bytes, width, height);
         }
-        return new DataResult(SpringContextHelper.getBean(RxFilePersistencer.class).save(FileAccessEnum.findByValue(fileAccess,FileAccessEnum.公共读 ),bytes,filePrefix,fileExtName));
+        return new DataResult(RxBeanHelper.getFactoryBean(RxFilePersistencer.class).save(FileAccessEnum.findByValue(fileAccess,FileAccessEnum.公共读 ),bytes,filePrefix,fileExtName));
 	}
 	
 	/**
@@ -276,7 +277,7 @@ public class FileController {
     		throw new BusinessException("读取文件流异常.");
     	}
     	
-    	String path = SpringContextHelper.getBean(RxFilePersistencer.class).save(FileAccessEnum.findByValue(uParam.getFileAccess(),FileAccessEnum.公共读), in_b, uParam.getFilePrefix(), fileExtName);
+    	String path = RxBeanHelper.getFactoryBean(RxFilePersistencer.class).save(FileAccessEnum.findByValue(uParam.getFileAccess(),FileAccessEnum.公共读), in_b, uParam.getFilePrefix(), fileExtName);
 
     	/*if(!uParam.isFullPath()) {
     		path = FileConverter.getFullPathForPath(path,null);

@@ -363,7 +363,7 @@ public class OssHelper {
         //SpringContextHelper.springContext.getResource("classpath:config.properties")
         InputStream policyInputStream = null;
 		try {
-			policyInputStream = SpringContextHelper.springContext.getResource("classpath:"+ PropertiesHelper.getValue(policyFile)).getInputStream();
+			policyInputStream = SpringContextHelper.getSpringContext().getResource("classpath:"+ PropertiesHelper.getValue(policyFile)).getInputStream();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

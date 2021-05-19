@@ -10,44 +10,18 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 import com.rx.base.cache.CacheHelper;
-import com.rx.pub.msgq.base.Msgq;
+import com.rx.base.msgq.Msgq;
+import com.rx.base.msgq.MsgqProducerProvider;
 import com.rx.pub.msgq.po.MsgqPo;
 import com.rx.pub.msgq.service.MsgqService;
-import com.rx.spring.utils.SpringContextHelper;
 
 @Component
-public class MsgqProducer {
+public class MsgqProducer implements MsgqProducerProvider<Msgq>{
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
     
     @Autowired
     private MsgqService msgqService;
-    
-    public static String sendMessage(Msgq msg) {
-    	return sendMessage(msg,null,null);
-    }
-    
-    public static String sendMessage(Msgq msg,Date beginTime,Date endTime) {
-    	return sendMessage(msg,beginTime,endTime,false,null,null);
-    }
-    
-    public static String sendMessage(Msgq msg,Date beginTime,Date endTime,String groupKey) {
-    	return sendMessage(msg,beginTime,endTime,false,null,groupKey);
-    }
-    public static String sendMessage(Msgq msg,Date beginTime,Date endTime,boolean cover,String singleKey) {
-    	return sendMessage(msg,beginTime,endTime,cover,singleKey,null);
-    }
-    
-    public static String sendMessage(Msgq msg,Date beginTime,Date endTime,boolean cover,String singleKey,String groupKey) {
-    	MsgqProducer client;
-        try {
-        	client = SpringContextHelper.getBean(MsgqProducer.class);
-        	return client.sendMsg(msg,beginTime,endTime,cover,singleKey,groupKey);
-        }catch (Exception ex){
-        	ex.printStackTrace();
-        }
-        return null;
-    }
     /**
      * 
      * @param msg 消息体
@@ -56,7 +30,8 @@ public class MsgqProducer {
      * @param singleKey 独生键
      * @param cover 如果设置独生键，是否覆盖之前的消息。true，覆盖之前的消息，新加的消息有效。false，如果有旧的消息，旧的消息有效，新加的消息无效。
      */
-    public String sendMsg(Msgq msg,Date beginTime,Date endTime,boolean cover,String singleKey,String groupKey){
+    @Override
+    public String sendMsgq(Msgq msg,Date beginTime,Date endTime,boolean cover,String singleKey,String groupKey){
     	
     	if(singleKey == null) {
 	    	synchronized (MSGQ_KEY){

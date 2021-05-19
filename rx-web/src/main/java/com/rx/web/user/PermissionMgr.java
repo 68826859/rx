@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.rx.base.bean.RxBeanHelper;
 import com.rx.base.user.RxPermissionable;
 import com.rx.base.user.RxUserable;
 import com.rx.spring.utils.SpringContextHelper;
@@ -38,7 +40,7 @@ public class PermissionMgr {
 			}
 			list.add(ee);
 		}
-		SpringContextHelper.getBean(PermissionPersistencer.class).regPermission(list,userType);
+		RxBeanHelper.getFactoryBean(PermissionPersistencer.class).regPermission(list,userType);
 		//permissionItems.put(an, list);
 	}
 	
@@ -110,7 +112,7 @@ public class PermissionMgr {
 	}
 	
 	public static List<? extends RxPermissionable> getAllPermissionItems(Class<? extends RxUserable> userType) {
-		return SpringContextHelper.getBean(PermissionPersistencer.class).getAllPermissionItems(userType);
+		return RxBeanHelper.getFactoryBean(PermissionPersistencer.class).getAllPermissionItems(userType);
 	}
 	
 

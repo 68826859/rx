@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.env.Environment;
 
+import com.rx.base.bean.RxBeanHelper;
+
 /**
  * 读取配置文件
  */
@@ -12,7 +14,7 @@ public class PropertiesHelper {
     private static transient final Log log = LogFactory.getLog(PropertiesHelper.class);
     
     private static Environment getEnv() {
-    	return ((Environment)SpringContextHelper.getBean(Environment.class));
+    	return ((Environment)RxBeanHelper.getFactoryBean(Environment.class));
     }
     
     public static String getValue(String key) {

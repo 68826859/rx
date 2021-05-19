@@ -3,6 +3,7 @@ package com.rx.pub.file.po;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.rx.pub.file.utils.FileConverter;
 import com.rx.spring.utils.SpringContextHelper;
+import com.rx.base.bean.RxBeanHelper;
 import com.rx.base.file.RxFilePersistencer;
 import com.rx.base.model.annotation.RxModelField;
 
@@ -146,7 +147,7 @@ public class RxFile {
 	}
 
 	public byte[] fileBytes() {
-		return SpringContextHelper.getBean(RxFilePersistencer.class).read(this.getPath());
+		return RxBeanHelper.getFactoryBean(RxFilePersistencer.class).read(this.getPath());
 	}
 
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import javax.persistence.Id;
 import com.alibaba.fastjson.JSON;
+import com.rx.base.bean.RxBeanHelper;
 import com.rx.base.model.RxModelDeleter;
 import com.rx.base.model.RxModelInserter;
 import com.rx.base.model.RxModelUpdater;
@@ -52,7 +53,7 @@ public class CrudModelApplyer implements RxModelInserter,RxModelDeleter,RxModelU
 
 	@Override
 	public boolean afterUpdate(Object obj, Class<?> entityClass, Object result) {
-		IPubCrudService service = SpringContextHelper.getBean(IPubCrudService.class);
+		IPubCrudService service = RxBeanHelper.getFactoryBean(IPubCrudService.class);
 		PubCrud record = new PubCrud();
 		record.setId(StringUtil.getUUID());
 		record.setCrudType(CrudTypeEnum.修改.getCode());
@@ -74,7 +75,7 @@ public class CrudModelApplyer implements RxModelInserter,RxModelDeleter,RxModelU
 		List<ModelDefine> models = MybatisModelHelper.getModelRefs(entityClass);
 		
 		for(ModelDefine md:models) {
-			MyBatisMapper map = (MyBatisMapper)SpringContextHelper.springContext.getBean(md.getMapperBeanName());
+			MyBatisMapper map = (MyBatisMapper)RxBeanHelper.getFactoryBean(md.getMapperBeanName());
 			int count = 0;
 			try {
 				Object search = md.getFieldModelClass().newInstance();
@@ -95,7 +96,7 @@ public class CrudModelApplyer implements RxModelInserter,RxModelDeleter,RxModelU
 			}
 		}
 		
-		IPubCrudService service = SpringContextHelper.getBean(IPubCrudService.class);
+		IPubCrudService service = RxBeanHelper.getFactoryBean(IPubCrudService.class);
 		PubCrud record = new PubCrud();
 		record.setId(StringUtil.getUUID());
 		record.setCrudType(CrudTypeEnum.删除.getCode());
@@ -133,7 +134,7 @@ public class CrudModelApplyer implements RxModelInserter,RxModelDeleter,RxModelU
 
 	@Override
 	public boolean afterInsert(Object model, Class<?> entityClass, Object result) {
-		IPubCrudService service = SpringContextHelper.getBean(IPubCrudService.class);
+		IPubCrudService service = RxBeanHelper.getFactoryBean(IPubCrudService.class);
 		PubCrud record = new PubCrud();
 		record.setId(StringUtil.getUUID());
 		record.setCrudType(CrudTypeEnum.新增.getCode());

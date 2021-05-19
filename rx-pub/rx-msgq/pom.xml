@@ -21,6 +21,11 @@
 			<groupId>com.rx</groupId>
 			<artifactId>rx-web</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.rx</groupId>
+			<artifactId>rx-base2</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.rx.pub</groupId>

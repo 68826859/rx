@@ -15,6 +15,7 @@ import com.rx.web.httpsession.RxSession;
 import com.rx.web.httpsession.RxSessionConfig;
 import com.rx.web.utils.HttpServletHelper;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.rx.base.bean.RxBeanHelper;
 import com.rx.base.cache.CacheHelper;
 
 
@@ -167,7 +168,7 @@ public abstract class RxUserAbstract<T extends HttpSession> implements RxUser<T>
 	
 	public List<? extends RxPermissionable> getMyPermissions(){
 		if(this.myPermissions == null) {
-			this.myPermissions = SpringContextHelper.getBean(RxPermissionProvider.class).getUserPermissions(this);
+			this.myPermissions = RxBeanHelper.getFactoryBean(RxPermissionProvider.class).getUserPermissions(this);
 		}
 		RxUserConfig cfg = RxUserConfig.getConfig(this.getClass());
 		this.getMySession(true).setAttribute(cfg.getUserSessionAttribute(), this);

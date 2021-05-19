@@ -62,7 +62,7 @@ public class UrlUtil {
     }
 
     public static void main(String[] args) {
-        String str = "测试1";
+        String str = "a=测试1&b=2&";
         System.out.println(getURLEncoderString(str));
         System.out.println(getURLDecoderString(str));
     }

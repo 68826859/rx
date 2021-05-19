@@ -33,6 +33,10 @@
 			<groupId>com.rx</groupId>
 			<artifactId>rx-model</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.rx</groupId>
+			<artifactId>rx-base2</artifactId>
+		</dependency>
 		
 				<!-- https://mvnrepository.com/artifact/tk.mybatis/mapper-spring-boot-starter -->
 		<dependency>

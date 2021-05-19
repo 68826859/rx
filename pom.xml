@@ -34,6 +34,12 @@
 				<artifactId>rx-base</artifactId>
 				<version>${rx.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-base2</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.rx</groupId>
@@ -50,6 +56,17 @@
 			<dependency>
 				<groupId>com.rx</groupId>
 				<artifactId>rx-model</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-model2</artifactId>
+				<version>${rx.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.rx</groupId>
+				<artifactId>rx-sdk</artifactId>
 				<version>${rx.version}</version>
 			</dependency>
 
@@ -267,9 +284,12 @@
 	</dependencies>
 	<modules>
 		<module>rx-base</module>
+		<module>rx-base2</module>
 		<module>rx-common</module>
 		<module>rx-dubbo</module>
 		<module>rx-model</module>
+		<module>rx-model2</module>
+		<module>rx-sdk</module>
 		<module>rx-pub</module>
 		<module>rx-spring</module>
 		<module>rx-web</module>

@@ -34,4 +34,12 @@ public interface RxCacher {
 	
 	void clear();
 	
+	
+	
+	public static RxCacher  getCacher() {
+		
+		return null;
+		
+	}
+	
 }

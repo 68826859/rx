@@ -2,13 +2,13 @@ package com.rx.pub.file.utils;
 
 import java.lang.reflect.Field;
 
+import com.rx.base.bean.RxBeanHelper;
 import com.rx.base.model.ModelApplyEnum;
 import com.rx.base.model.RxModelFieldApplyer;
 import com.rx.base.model.annotation.RxConfig;
 import com.rx.pub.file.base.RxFilePathConverter;
 import com.rx.pub.file.base.RxFilePathParam;
 import com.rx.spring.utils.PropertiesHelper;
-import com.rx.spring.utils.SpringContextHelper;
 
 public class FileConverter implements RxModelFieldApplyer  {
 
@@ -19,7 +19,7 @@ public class FileConverter implements RxModelFieldApplyer  {
 
 	public static String getFullPathForPath(String path, RxFilePathParam param) {
 		// 调用路径转换器方法
-		RxFilePathConverter pathConverter =  SpringContextHelper.getBean(RxFilePathConverter.class);
+		RxFilePathConverter pathConverter =  RxBeanHelper.getFactoryBean(RxFilePathConverter.class);
 		if (pathConverter != null) {
 			return pathConverter.convert(path, param);
 		}

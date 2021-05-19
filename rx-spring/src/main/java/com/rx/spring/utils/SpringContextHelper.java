@@ -1,57 +1,59 @@
 package com.rx.spring.utils;
 
-import com.rx.base.service.BaseService;
-import com.rx.spring.SpringBaseService;
-import org.springframework.aop.support.AopUtils;
+import java.lang.reflect.Type;
+import java.util.Map;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Map;
+import org.springframework.util.ClassUtils;
+import com.rx.base.bean.RxBeanHelper;
+import com.rx.base.service.BaseService;
 
 @Component
-public class SpringContextHelper implements ApplicationContextAware {
-    //public static final String SESSION_CATALOG = "spring:session:sessions:";//redis存session目录
-
-    //public static final String SYS_USER_SESSION = "_sys_user_session";//后台session key
-    //public static final String HAILE_A_KEY = "HAILE_A_KEY";
-    public static ApplicationContext springContext = null;
-
-    /**
-     * 获取bean实例对象
-     *
-     * @param beanName
-     * @param clazz
-     * @return
-     */
-    public static <T> T getBean(String beanName, Class<T> clazz) {
-        return springContext.getBean(beanName, clazz);
-    }
-
-    public static <T> T getBean(Class<T> clazz) {
-    	
-        return springContext.getBean(clazz);
-    }
+public class SpringContextHelper extends RxBeanHelper implements ApplicationContextAware {
+	
+    private ApplicationContext springContext = null;
 
     @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {
         springContext = context;
     }
 
+    public SpringContextHelper() {
+    	super();
+    }
+    
+    
+    public ApplicationContext getApplicationContext() {
+    	return springContext;
+    }
 
+    
+    public static ApplicationContext getSpringContext() {
+    	try {
+			return ((SpringContextHelper)RxBeanHelper.getBeanProvider()).getApplicationContext();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return null;
+    }
+    
     public static BaseService<?> getBeanService(Class<?> clazz) {
 
+    	try {
+			return RxBeanHelper.getBeanProvider().getBean(BaseService.class,new Type[] {clazz});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	/*
         BaseService<?> service = null;
-        String[] beans = springContext.getBeanDefinitionNames();
+        String[] beans = getSpringContext().getBeanDefinitionNames();
         for (String beanName : beans) {
-            Class<?> beanType = springContext.getType(beanName);
+            Class<?> beanType = getSpringContext().getType(beanName);
             if (BaseService.class.isAssignableFrom(beanType)) {
-                service = (BaseService<?>) springContext.getBean(beanName);
+                service = (BaseService<?>) getSpringContext().getBean(beanName);
                 if (Proxy.class.isAssignableFrom(beanType)) {
                     String bn = service.toString();//cn.com.gdca.remot.deposit.service.impl.RtDepositServiceImpl@70fdad84
                     bn = bn.substring(0, bn.indexOf("@"));
@@ -75,6 +77,7 @@ public class SpringContextHelper implements ApplicationContextAware {
                 }
             }
         }
+        */
         return null;
     }
     
@@ -82,7 +85,7 @@ public class SpringContextHelper implements ApplicationContextAware {
      * 获取对象泛型
      * @param clazz
      * @return
-     */
+    
     
     public static Class<?> getBeanActualType(Object obj, Class<?> targetClass,int index) {
     	Class<?> cls;
@@ -91,83 +94,94 @@ public class SpringContextHelper implements ApplicationContextAware {
     	}else {
     		cls = obj.getClass();
     	}
-    	return SpringContextHelper.getClassActualType(cls,targetClass,0);
-    }
-    /**
-     * 获取类的泛型
-     * @param clazz
-     * @return
-     */
-    
-    public static Class<?> getClassActualType(Class<?> clazz, Class<?> targetClass,int index) {
-    	
-    	if(targetClass.isInterface()){
-    		Type[] types = clazz.getGenericInterfaces();
-    		if(types.length > 0) {
-	    		for(Type type : types) {
-	    			if(type instanceof ParameterizedType) {
-	    				if(((ParameterizedType)type).getRawType().getTypeName().equals(targetClass.getName())) {
-		    				return (Class<?>)((ParameterizedType)type).getActualTypeArguments()[index];
-		    			}
-	    			}
-	    		}
-    		}
-    		Class<?> res = null;
-    		if(!clazz.isInterface()) {
-    			if(clazz.getSuperclass() != Object.class) {
-        			res = getClassActualType(clazz.getSuperclass(),targetClass,index);
-        		}
-    		}
-    		if(res != null) {
-    			return res;
-    		}
-    		Class<?>[] ss = clazz.getInterfaces();
-			for(Class<?> s:ss) {
-				res = getClassActualType(s,targetClass,index);
-				if(res != null) {
-					return res;
-				}
-			}
-    	}else {
-    		if(clazz.getSuperclass() == targetClass) {
-    			return getSuperclassActualType(clazz,index);
-    		} else if(clazz.getSuperclass() != Object.class) {
-    			return getClassActualType(clazz.getSuperclass(),targetClass,index);
-    		}
-    	}
-        return null;
-    }
+    	return RxBeanHelper.getClassActualType(cls,targetClass,0);
+    } */
 
-    public static Class<?> getSuperclassActualType(Class<?> clazz,int index) {
-    	return (Class<?>) ((ParameterizedType)clazz.getGenericSuperclass()).getActualTypeArguments()[index];
-    }
-    
-    public static Class<?> getInterfacesActualType(Class<?> clazz,Class<?> targetClass,int index) {
-    	Type[] types = clazz.getGenericInterfaces();
-		if(types.length > 0) {
-    		for(Type type : types) {
-    			if(type instanceof ParameterizedType) {
-    				if(((ParameterizedType)type).getRawType().getTypeName().equals(targetClass.getName())) {
-	    				return (Class<?>)((ParameterizedType)type).getActualTypeArguments()[index];
-	    			}
-    			}
-    		}
+	@Override
+	public boolean containsBean(String name) {
+		return springContext.containsBean(name);
+	}
+
+	@Override
+	public boolean isSingleton(String name) throws Exception {
+		return springContext.isSingleton(name);
+	}
+
+	@Override
+	public boolean isPrototype(String name) throws Exception {
+		return springContext.isPrototype(name);
+	}
+
+	@Override
+	public boolean isTypeMatch(String name, Class<?> typeToMatch) throws Exception {
+		return springContext.isTypeMatch(name, typeToMatch);
+	}
+
+	@Override
+	public Class<?> getType(String name) throws Exception {
+		return springContext.getType(name);
+	}
+
+	@Override
+	public String[] getAliases(String name) {
+		return springContext.getAliases(name);
+	}
+
+
+	@Override
+	public Object getBean(String name) throws Exception {
+		return springContext.getBean(name);
+	}
+
+
+	@Override
+	public <T> T getBean(String name, Class<T> requiredType) throws Exception {
+		return springContext.getBean(name, requiredType);
+	}
+
+
+	@Override
+	public Object getBean(String name, Object... args) throws Exception {
+		return springContext.getBean(name, args);
+	}
+
+
+	@Override
+	public <T> T getBean(Class<T> requiredType) throws Exception {
+		return springContext.getBean(requiredType);
+	}
+
+
+	@Override
+	public <T> T getBean(Class<T> requiredType, Object... args) throws Exception {
+		return springContext.getBean(requiredType, args);
+	}
+
+
+	@Override
+	public <T> Map<String, T> getBeans(Class<T> clazz) throws Exception {
+		return springContext.getBeansOfType(clazz);
+	}
+
+	@Override
+	public Class<?> getProxyTargetClass(Class<?> clazz) {
+		return ClassUtils.getUserClass(clazz);
+	}
+
+	@Override
+	public <T> T getBean(Class<T> requiredType, Type[] genericType) throws Exception {
+		Map<String, T> map = springContext.getBeansOfType(requiredType);
+		if(map.size() > 0) {
+			loop1:for(T t:map.values()) {
+				ResolvableType resolvableType = ResolvableType.forClass(requiredType,getProxyTargetClass(t.getClass()));
+				for(int i = 0;i<genericType.length;i++) {
+					if(genericType[i] != resolvableType.getGeneric(i).resolve()) {
+						continue loop1;
+					}
+				}
+				return t;
+			}
 		}
 		return null;
-    }
-    
-    
-    public static <T> Map<String, T> getBeans(Class<T> clazz) {
-        return BeanFactoryUtils.beansOfTypeIncludingAncestors(springContext, clazz);
-    }
-
-
-    public static <T> Collection<T> getBeanCollections(Class<T> clazz) {
-        Map<String, T> map = getBeans(clazz);
-        if (!map.isEmpty()) {
-            return map.values();
-        }
-        return null;
-    }
-
+	}
 }

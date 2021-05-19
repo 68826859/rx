@@ -9,6 +9,8 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import com.rx.base.bean.RxBeanHelper;
 import com.rx.base.file.FileAccessEnum;
 import com.rx.base.file.RxFilePersistencer;
 import com.rx.base.page.PageExcute;
@@ -78,7 +80,7 @@ public class RxFileServiceImpl extends MybatisBaseService<RxFile> implements RxF
     	record2.setCreateTime(new Date());
     	if(record == null){
     		String fileExtraName = fileName.substring(fileName.lastIndexOf(".")+1).trim();
-    		String key = SpringContextHelper.getBean(RxFilePersistencer.class).save(FileAccessEnum.findByValue(fileAccess,FileAccessEnum.公共读),fileBytes,filePrefix,fileExtraName);
+    		String key = RxBeanHelper.getFactoryBean(RxFilePersistencer.class).save(FileAccessEnum.findByValue(fileAccess,FileAccessEnum.公共读),fileBytes,filePrefix,fileExtraName);
     		record2.setPath(key);
     		record2.setId(id);
     	}else{

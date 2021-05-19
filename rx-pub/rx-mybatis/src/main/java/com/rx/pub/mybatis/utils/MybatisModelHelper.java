@@ -48,9 +48,9 @@ public class MybatisModelHelper {
 
 	
 	public static void initAllModelClass() {
-		String[] beanNames = SpringContextHelper.springContext.getBeanNamesForType(MyBatisMapper.class);
+		String[] beanNames = SpringContextHelper.getSpringContext().getBeanNamesForType(MyBatisMapper.class);
 		for(String beanName:beanNames) {
-			Class<?> beanType = SpringContextHelper.springContext.getType(beanName);
+			Class<?> beanType = SpringContextHelper.getSpringContext().getType(beanName);
 			Class<?> modelClass = getInterfaceGeneric(beanType);
 			Field[] fields = modelClass.getDeclaredFields();
 			for(Field field:fields) {
